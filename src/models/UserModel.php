@@ -1,22 +1,20 @@
 <?php
 
-namespace App\models;
+namespace App\Models;
 
-use App\Database;
+use App\config\Database;
 use PDO;
 use Exception;
 
-class Model
+class UserModel
 {
-    protected $table = self::class;
+    protected $table = 'users'; // Nom de la table
     private $pdo = null;
-    protected $keyName = "id";
+    protected $keyName = 'id'; // Clé primaire par défaut
 
-    public function __construct(string $table = "", string $key = "id")
+    public function __construct()
     {
-        $this->table = 'user';
         $this->pdo = Database::getPDO();
-        var_dump($this->pdo);
     }
 
     public function createUser(string $firstname, string $lastname, string $email, string $password): int|bool
@@ -32,13 +30,12 @@ class Model
             ]);
             return $this->pdo->lastInsertId();
         } catch (Exception $e) {
-            echo($e->getMessage());
+            echo $e->getMessage();
             return false;
         }
-
     }
 
-    public function findAllUser(): array|bool
+    public function findAllUsers(): array|bool
     {
         $sql = "SELECT * FROM $this->table";
         try {
@@ -46,7 +43,7 @@ class Model
             $statement->execute();
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            echo($e->getMessage());
+            echo $e->getMessage();
             return false;
         }
     }
@@ -58,9 +55,23 @@ class Model
             $statement = $this->pdo->prepare($sql);
             $statement->bindParam(":id", $id);
             $statement->execute();
-            return $statement->fetchAll(PDO::FETCH_ASSOC);
+            return $statement->fetch(PDO::FETCH_ASSOC); // Correction pour récupérer une seule ligne
         } catch (Exception $e) {
-            echo($e->getMessage());
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function findUserByIEmail(string $email): array|bool
+    {
+        $sql = "SELECT * FROM $this->table WHERE email = :email";
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindParam(":email", $email);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC); // Correction pour récupérer une seule ligne
+        } catch (Exception $e) {
+            echo $e->getMessage();
             return false;
         }
     }
@@ -83,11 +94,11 @@ class Model
             foreach ($values as $key => $val) {
                 $statement->bindParam(":$key", $val);
             }
-            $statement->bindParam(":$key", $id);
+            $statement->bindParam(":id", $id); // Correction ici
             $statement->execute();
             return $statement->rowCount();
         } catch (Exception $e) {
-            echo($e->getMessage());
+            echo $e->getMessage();
             return false;
         }
     }
@@ -95,17 +106,15 @@ class Model
     public function deleteUser(int $id): int|bool
     {
         $key = $this->keyName;
-        $sql = "DELETE $this->table WHERE $key = :id";
+        $sql = "DELETE FROM $this->table WHERE $key = :id"; // Ajout de "FROM"
         try {
             $statement = $this->pdo->prepare($sql);
-
-            $statement->bindParam(":$key", $id);
+            $statement->bindParam(":id", $id); // Correction ici
             $statement->execute();
             return $statement->rowCount();
         } catch (Exception $e) {
-            echo($e->getMessage());
+            echo $e->getMessage();
             return false;
         }
     }
-
 }
