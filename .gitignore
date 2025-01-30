@@ -1,0 +1,43 @@
+# Répertoires et fichiers concernant PhpStorm
+.idea/
+
+# Répertoires et fichiers concernant VSCode
+.vscode/
+
+# Répertoires et fichiers spécifiques à PHP
+/vendor/
+composer.lock
+
+# Répertoires de cache et de logs
+/cache/
+*.log
+*.cache
+
+# Fichiers de configuration locaux
+.env
+.env.local
+.phpunit.result.cache
+
+# Fichiers spécifiques à certains systèmes d'exploitation
+.DS_Store
+Thumbs.db
+
+# Autres fichiers temporaires
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# Répertoires ou fichiers de build/déploiement
+/build/
+dist/
+
+# Autres dossiers potentiels à ignorer
+/node_modules/
+/public/uploads/
+
+##### SASS
+.sass-cache/
+*.css.map
+*.sass.map
+*.scss.map

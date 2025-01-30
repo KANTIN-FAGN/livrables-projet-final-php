@@ -1,0 +1,15 @@
+{
+    "name": "kantinfagniart/livrables-projet-final-php",
+    "description": "Projet fin de module PHP",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Kantin FAGNIART"
+        }
+    ],
+    "require": {}
+}
