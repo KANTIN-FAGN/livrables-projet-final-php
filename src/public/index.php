@@ -2,6 +2,13 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..'); // Chemin vers le fichier .env
+$dotenv->load();
+
+// Exemples d'accès aux variables
+$jwtSecret = $_ENV['JWT_SECRET'];
+
+
 // Charger les routes
 $router = require __DIR__ . '/../../src/routes/routes.php';
 

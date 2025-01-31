@@ -63,7 +63,7 @@ unset($_SESSION["success"]);
                     Mot de passe
                 </label>
             </div>
-            <input type="submit" value="Envoyer" class="btn-submit">
+            <input type="submit" value="S'inscrire" class="btn-submit">
         </form>
     </div>
 </main>

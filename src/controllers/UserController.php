@@ -13,6 +13,13 @@ class UserController
         $this->userModel = new UserModel();
     }
 
+    /**
+     * @param $firstname
+     * @param $lastname
+     * @param $email
+     * @param $password
+     * @return bool|int
+     */
     public function createUser($firstname, $lastname, $email, $password)
     {
         // Utilisation du modèle pour créer l'utilisateur
@@ -22,6 +29,10 @@ class UserController
         return $userId;
     }
 
+    /**
+     * @param $email
+     * @return bool
+     */
     public function userExists($email): bool
     {
         $user =  $this->userModel->findUserByIEmail($email);
@@ -29,6 +40,10 @@ class UserController
         return $user !== false;
     }
 
+    /**
+     * @param $id
+     * @return array|bool
+     */
     public function getUser($id)
     {
         $user = $this->userModel->findUserByID($id);

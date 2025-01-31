@@ -5,16 +5,29 @@ use Core\Router;
 // Crée une instance de Router
 $router = new Router();
 $controller = new \App\Controllers\PageController();
+$authController = new \App\Controllers\AuthController();
 
 // Définir les routes
+$router->add('GET', '/', function () use ($controller) {
+    $controller->home();
+});
+
 $router->add('GET', '/register', function () use ($controller) {
     $controller->register();
 });
 $router->add('POST', '/register-controller', function () use ($controller) {
     $controller->registerService();
 });
+
 $router->add('GET', '/login', function () use ($controller) {
     $controller->login();
+});
+$router->add('POST', '/login-controller', function () use ($controller) {
+    $controller->loginService();
+});
+
+$router->add('POST', '/logout', function () use ($authController) {
+    $authController->logout();
 });
 
 // Par exemple : Route avec paramètre dynamique
