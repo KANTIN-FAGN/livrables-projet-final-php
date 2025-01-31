@@ -38,7 +38,7 @@ unset($_SESSION["success"]);
     </ul>
 <?php endif; ?>
 
-<form action="register.php" method="POST">
+<form action="services/registerService.php" method="POST">
     <input type="text" name="firstname" id="firstname" placeholder="Prénom"
            value="<?= isset($_POST['firstname']) ? htmlspecialchars($_POST['firstname']) : '' ?>">
     <br>

@@ -14,7 +14,7 @@ composer.lock
 *.cache
 
 # Fichiers de configuration locaux
-src/.env
+.env
 .env.local
 .phpunit.result.cache
 

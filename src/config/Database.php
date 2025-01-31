@@ -2,6 +2,7 @@
 
 namespace App\config;
 
+use Dotenv\Dotenv;
 use PDO;
 
 class Database
@@ -10,7 +11,7 @@ class Database
 
     public static function getPDO(): PDO
     {
-        if (file_exists(__DIR__ . '/../../.env')) {
+        if (file_exists(__DIR__ . '../../../.env')) {
             $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
             $dotenv->load();
         }
