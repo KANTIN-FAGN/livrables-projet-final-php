@@ -16,7 +16,7 @@ class PageController
      */
     public static function register()
     {
-        include_once '../views/auth/register/Register-form.php';
+        include_once '../views/auth/register/register.php';
     }
 
     /**
@@ -32,7 +32,7 @@ class PageController
      */
     public static function login()
     {
-        include_once '../views/auth/login/Login-form.php';
+        include_once '../views/auth/login/login.php';
     }
 
     /**

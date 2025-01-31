@@ -13,7 +13,7 @@ class AuthController
 
         if (!$email || !$password) {
             $_SESSION["errors"]["validation"] = "Email ou mot de passe manquant.";
-            header('Location: ../views/auth/login/Login-form.php', true, 400);
+            header('Location: ../views/auth/login/login.php', true, 400);
             exit;
         }
 
@@ -24,7 +24,7 @@ class AuthController
 
             if (!$user || !password_verify($password, $user['password'])) {
                 $_SESSION["errors"]["validation"] = "Email ou mot de passe incorrect.";
-                header('Location: ../views/auth/login/Login-form.php', true, 401);
+                header('Location: ../views/auth/login/login.php', true, 401);
                 exit;
             }
 
@@ -56,7 +56,7 @@ class AuthController
 
         } catch (\Exception $e) {
             $_SESSION["errors"]["exception"] = "Erreur interne : " . $e->getMessage();
-            header('Location: ../views/auth/login/Login-form.php', true, 500);
+            header('Location: ../views/auth/login/login.php', true, 500);
             exit;
         }
     }
