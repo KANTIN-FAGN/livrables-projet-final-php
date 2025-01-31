@@ -17,40 +17,55 @@ unset($_SESSION["success"]);
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Inscription</title>
     <style>
-        .error { color: red; }
-        .success { color: green; }
+        <?php include "Register-form.scss" ?>
     </style>
 </head>
 <body>
-<h1>Inscription</h1>
+<main>
+    <div class="container">
+        <div class="title">
+            <h1>Inscription</h1>
 
-<!-- Affiche un message de succès -->
-<?php if ($success): ?>
-    <p class="success"><?= htmlspecialchars($success) ?></p>
-<?php endif; ?>
-
-<!-- Afficher les erreurs générales -->
-<?php if (!empty($errors)): ?>
-    <ul class="error">
-        <?php foreach ($errors as $field => $error): ?>
-            <li><?= htmlspecialchars($error) ?></li>
-        <?php endforeach; ?>
-    </ul>
-<?php endif; ?>
-
-<form action="services/registerService.php" method="POST">
-    <input type="text" name="firstname" id="firstname" placeholder="Prénom"
-           value="<?= isset($_POST['firstname']) ? htmlspecialchars($_POST['firstname']) : '' ?>">
-    <br>
-    <input type="text" name="lastname" id="lastname" placeholder="Nom"
-           value="<?= isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname']) : '' ?>">
-    <br>
-    <input type="email" name="email" id="email" placeholder="Email"
-           value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
-    <br>
-    <input type="password" name="password" id="password" placeholder="Mot de passe">
-    <br>
-    <input type="submit" value="Envoyer">
-</form>
+            <!-- Afficher les erreurs générales -->
+            <?php if (!empty($errors)): ?>
+                <ul class="error">
+                    <?php foreach ($errors as $field => $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+        </div>
+        <form action="/register-controller" method="POST" class="register-form">
+            <div class="input-field">
+                <input type="text" name="firstname" id="firstname" placeholder="Prénom"
+                       value="<?= isset($_POST['firstname']) ? htmlspecialchars($_POST['firstname']) : '' ?>">
+                <label for="firstname">
+                    Prénom
+                </label>
+            </div>
+            <div class="input-field">
+                <input type="text" name="lastname" id="lastname" placeholder="Nom"
+                       value="<?= isset($_POST['lastname']) ? htmlspecialchars($_POST['lastname']) : '' ?>">
+                <label for="lastname">
+                    Nom
+                </label>
+            </div>
+            <div class="input-field">
+                <input type="email" name="email" id="email" placeholder="Email"
+                       value="<?= isset($_POST['email']) ? htmlspecialchars($_POST['email']) : '' ?>">
+                <label for="email">
+                    Email
+                </label>
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" id="password" placeholder="Mot de passe">
+                <label for="password">
+                    Mot de passe
+                </label>
+            </div>
+            <input type="submit" value="Envoyer" class="btn-submit">
+        </form>
+    </div>
+</main>
 </body>
 </html>

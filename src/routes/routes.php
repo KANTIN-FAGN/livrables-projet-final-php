@@ -10,6 +10,9 @@ $controller = new \App\Controllers\PageController();
 $router->add('GET', '/register', function () use ($controller) {
     $controller->register();
 });
+$router->add('POST', '/register-controller', function () use ($controller) {
+    $controller->registerService();
+});
 $router->add('GET', '/login', function () use ($controller) {
     $controller->login();
 });

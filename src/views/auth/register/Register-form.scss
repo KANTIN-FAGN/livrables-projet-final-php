@@ -1,0 +1,76 @@
+main {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .container {
+    min-width: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    .title {
+      width: 100%;
+    }
+    .register-form {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      .input-field {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        label {
+          position: absolute;
+          top: -10px;
+          left: 10px;
+          padding: 0 5px;
+          background-color: white;
+          transition: all 0.3s ease;
+        }
+        input {
+          height: 1.5rem;
+          padding: 10px;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          margin-bottom: 25px;
+          &:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0 1000px white inset;
+            -webkit-text-fill-color: #000;
+          }
+          &:focus {
+            outline: none;
+            border: 1px solid #009aff;
+          }
+          &:focus + label {
+            color: #009aff;
+            top: -20px;
+            transition: all 0.3s ease;
+          }
+        }
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 10px;
+        background-color: #009aff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        &:hover {
+          background-color: #0080d0;
+          transition: all 0.3s ease;
+        }
+      }
+    }
+  }
+}
+
+
+.error {
+  color: red;
+}

@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__DIR__, 4) . '/vendor/autoload.php';
+require_once dirname(__DIR__, 4) . '/../vendor/autoload.php';
 use App\Controllers\UserController;
 
 session_start(); // Démarrage de la session pour gérer les erreurs
@@ -58,5 +58,5 @@ if ($newUserId === false) {
 
 // Tout est correct, afficher un message de succès ou rediriger
 $_SESSION["success"] = "Utilisateur créé avec succès !";
-header('Location: register-form.php');
+header('Location: register');
 exit();
