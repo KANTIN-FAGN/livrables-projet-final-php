@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+define('BASE_PATH', __DIR__ . '/../../');
+
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..'); // Chemin vers le fichier .env
 $dotenv->load();
 

@@ -42,4 +42,9 @@ class PageController
     {
         include_once '../views/auth/login/services/loginService.php';
     }
+
+    public static function profile()
+    {
+        include_once '../views/profile/profile.php';
+    }
 }

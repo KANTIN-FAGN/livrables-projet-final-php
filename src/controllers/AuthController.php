@@ -51,6 +51,7 @@ class AuthController
             );
 
             // Rediriger vers une page sécurisée (tableau de bord par exemple)
+            $_SESSION["connected"] = true;
             header('Location: /');
             exit;
 

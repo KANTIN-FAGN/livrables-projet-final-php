@@ -25,9 +25,8 @@ if (!$hasEmail || !$hasPassword) {
 // Si tout va bien, déléguer au contrôleur AuthController
 try {
     $authController = new AuthController();
-    $authController->login(); // Appelle directement la méthode `login()`
+    $authController->login();
 } catch (Exception $e) {
-    // Gérer les erreurs éventuelles en les enregistrant dans la session
     $_SESSION["errors"]["exception"] = $e->getMessage();
     header('Location: ../login/login.php', true, 500);
     exit;

@@ -12,6 +12,10 @@ $router->add('GET', '/', function () use ($controller) {
     $controller->home();
 });
 
+$router->add('GET', '/profile', function () use ($controller) {
+    $controller->profile();
+});
+
 $router->add('GET', '/register', function () use ($controller) {
     $controller->register();
 });
