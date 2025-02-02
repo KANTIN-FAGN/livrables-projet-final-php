@@ -1,5 +1,8 @@
 <?php
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 use App\Core\Services\JwtService;
 
 $jwt = $_COOKIE['access_token'] ?? null;
@@ -17,8 +20,14 @@ $userData = JwtService::verifyToken($jwt);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil utilisateur</title>
+    <style>
+        <?= file_get_contents(BASE_PATH . 'src/views/components/header/header.scss') ?>
+        <?= file_get_contents(BASE_PATH . 'src/public/style.css') ?>
+    </style>
 </head>
 <body>
-<h1>Bienvenue, <?= htmlspecialchars($userData['email']); ?> !</h1>
+<main>
+    <?php include BASE_PATH . 'src/views/components/header/header.php'; ?>
+</main>
 </body>
 </html>

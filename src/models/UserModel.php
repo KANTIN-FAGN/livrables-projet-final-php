@@ -80,7 +80,7 @@ class UserModel
      * @param string $email
      * @return array|bool
      */
-    public function findUserByIEmail(string $email): array|bool
+    public function findUserByEmail(string $email): array|bool
     {
         $sql = "SELECT * FROM $this->table WHERE email = :email";
         try {
@@ -92,6 +92,18 @@ class UserModel
             echo $e->getMessage();
             return false;
         }
+    }
+
+    public function findProfileByUserId(int $userId): ?array
+    {
+        $query = "SELECT * FROM profiles WHERE user_id = :user_id";
+        $statement = $this->pdo->prepare($query);
+        $statement->bindParam(':user_id', $userId, \PDO::PARAM_INT);
+        $statement->execute();
+
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
+
+        return $result ?? null; // Retourne un tableau ou null si rien n'est trouvé.
     }
 
     /**

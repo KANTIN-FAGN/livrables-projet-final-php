@@ -35,7 +35,7 @@ class UserController
      */
     public function userExists($email): bool
     {
-        $user =  $this->userModel->findUserByIEmail($email);
+        $user =  $this->userModel->findUserByEmail($email);
 
         return $user !== false;
     }

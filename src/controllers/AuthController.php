@@ -18,9 +18,10 @@ class AuthController
         }
 
         try {
-            // Simuler un utilisateur récupéré depuis la base de données
             $authModel = new \App\Models\UserModel();
-            $user = $authModel->findUserByIEmail($email);
+
+            // Étape 1 : Récupérer l'utilisateur avec seulement ses informations principales
+            $user = $authModel->findUserByEmail($email); // Pas d'avatar ici
 
             if (!$user || !password_verify($password, $user['password'])) {
                 $_SESSION["errors"]["validation"] = "Email ou mot de passe incorrect.";
@@ -28,16 +29,28 @@ class AuthController
                 exit;
             }
 
-            // Générer le token JWT
+            // Étape 2 : Récupérer l'avatar en fonction de l'ID utilisateur
+            $profile = $authModel->findProfileByUserId($user['id']);
+
+            // Ajouter une image par défaut si l'utilisateur n'a pas encore d'avatar
+            $avatar = $profile['avatar'] ?? '/path/to/default/avatar.png';
+            $bio = $profile['bio'] ?? 'Pas de biographie renseignée.';
+
+            // Étape 3 : Générer le token JWT avec les informations utilisateur et l'avatar
             $payload = [
                 'email' => $user['email'],
                 'id' => $user['id'],
+                'firstname' => $user['firstname'],
+                'lastname' => $user['lastname'],
+                'bio' => $bio,
+                'role' => $user['role'],
+                'avatar' => $avatar,
                 'iat' => time(),
-                'exp' => time() + 3600 // Expire en 1 heure
+                'exp' => time() + 3600
             ];
-            $jwt = \App\Core\Services\JwtService::generateToken($payload);
+            $jwt = \App\core\services\JwtService::generateToken($payload);
 
-            // Définir un cookie sécurisé
+            // Étape 4 : Définir un cookie sécurisé
             setcookie(
                 "access_token",
                 $jwt,
@@ -50,7 +63,7 @@ class AuthController
                 ]
             );
 
-            // Rediriger vers une page sécurisée (tableau de bord par exemple)
+            // Étape 5 : Rediriger vers une page sécurisée
             $_SESSION["connected"] = true;
             header('Location: /');
             exit;
