@@ -30,7 +30,7 @@ $router->add('POST', '/login-controller', function () use ($controller) {
     $controller->loginService();
 });
 
-$router->add('POST', '/logout', function () use ($authController) {
+$router->add('GET', '/logout', function () use ($authController) {
     $authController->logout();
 });
 

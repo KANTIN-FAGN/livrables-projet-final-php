@@ -64,10 +64,10 @@ class AuthController
 
     public function logout()
     {
-        // Supprimez le cookie JWT
         session_start();
         session_destroy();
         setcookie("access_token", "", time() - 3600, "/", "", false, true);
-        echo "Déconnexion réussie.";
+        header('Location: /');
+        exit;
     }
 }
