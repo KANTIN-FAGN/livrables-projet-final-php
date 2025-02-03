@@ -6,6 +6,17 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 
 use App\Core\Services\JwtService;
 
+// Définir BASE_PATH si elle n'existe pas
+if (!defined('BASE_PATH')) {
+    define('BASE_PATH', dirname(__DIR__, 4) . '/'); // On remonte jusqu'à la racine du projet
+}
+
+// Charger les variables d'environnement si elles ne sont pas déjà définies
+if (!isset($_ENV['BASE_URL'])) {
+    $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
+    $dotenv->load();
+}
+
 // Récupération du jeton JWT
 $jwt = $_COOKIE['access_token'] ?? null;
 
@@ -15,37 +26,37 @@ if ($jwt) {
     $userData = JwtService::verifyToken($jwt);
 }
 
-// Validation de la connexion : un utilisateur est considéré comme connecté si le jeton est valide
+// Validation de la connexion : un utilisateur est considéré connecté si le jeton est valide
 $isConnected = $userData !== null;
 
-// Gestion du chemin de l'avatar ou d'une image par défaut
-$defaultAvatarPath = BASE_PATH . 'src/public/img/avatars/default.png';
-$avatarPath = isset($userData['avatar'])
-    ? BASE_PATH . 'src/public/img/' . $userData['avatar']
-    : $defaultAvatarPath;
+// Gestion du chemin de l'avatar
+$defaultAvatarPathPublic = $_ENV['BASE_URL'] . '/img/avatars/default.png';
+$defaultAvatarPathFile = BASE_PATH . 'public/img/avatars/default.png'; // Chemin système
 
-// Vérifier si le fichier d'avatar existe sur le serveur
-if (!file_exists($avatarPath)) {
-    $avatarPath = $defaultAvatarPath;
+$avatarPathPublic = isset($userData['avatar'])
+    ? $_ENV['BASE_URL'] . '/img/avatars/' . $userData['avatar']
+    : $defaultAvatarPathPublic;
+
+$avatarPathFile = isset($userData['avatar'])
+    ? BASE_PATH . 'public/img/avatars/' . $userData['avatar']
+    : $defaultAvatarPathFile;
+
+// Vérification de l'existence du fichier sur le serveur
+if (!file_exists($avatarPathFile)) {
+    $avatarPathPublic = $defaultAvatarPathPublic;
 }
-
-// Encodage de l'image pour afficher via base64
-$imageData = base64_encode(file_get_contents($avatarPath));
-$mimeType = mime_content_type($avatarPath);
-
 ?>
+
 <div class="user-card">
     <?php if ($isConnected): ?>
         <div class="user-info">
             <div class="avatar-container">
-                <img src="data:<?= htmlspecialchars($mimeType) ?>;base64,<?= htmlspecialchars($imageData) ?>"
-                     alt="Avatar de l'utilisateur"
-                     class="avatar" />
+                <img src="<?= htmlspecialchars($avatarPathPublic) ?>" alt="Avatar utilisateur" class="avatar"/>
             </div>
             <div class="user-data">
-                <p><?= htmlspecialchars($userData['firstname'] ?? 'Unknown') ?> <?=htmlspecialchars(strtoupper($userData['lastname']) ?? 'Unknown') ?></p>
+                <p><?= htmlspecialchars($userData['firstname'] ?? 'Unknown') ?> <?= htmlspecialchars(strtoupper($userData['lastname'] ?? 'Unknown')) ?></p>
                 <p><?= htmlspecialchars($userData['email'] ?? 'Unknown') ?></p>
-                <p>Role: <?= htmlspecialchars($userData['bio'] ?? 'Unknown') ?></p>
+                <p>Rôle : <?= htmlspecialchars($userData['bio'] ?? 'Unknown') ?></p>
                 <a href="/profile">Accéder à votre profil</a>
             </div>
         </div>

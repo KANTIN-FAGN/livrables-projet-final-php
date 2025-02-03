@@ -2,14 +2,24 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+use Dotenv\Dotenv;
+
 define('BASE_PATH', __DIR__ . '/../../');
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..'); // Chemin vers le fichier .env
-$dotenv->load();
+$dotenvPath = BASE_PATH . '.env';
+if (file_exists($dotenvPath)) {
+    $dotenv = Dotenv::createImmutable(BASE_PATH); // Charger le fichier .env
+    $dotenv->load();
+} else {
+    die('.env introuvable. Assurez-vous qu\'il existe dans le répertoire racine.');
+}
+
+// Assurez-vous que BASE_URL est défini
+$baseUrl = $_ENV['BASE_URL'] ?? 'http://localhost:8001'; // Utilisez une valeur par défaut si non défini
+$baseUrl = rtrim($baseUrl, '/'); // On s'assure qu'il ne se termine pas par un "/"
 
 // Exemples d'accès aux variables
-$jwtSecret = $_ENV['JWT_SECRET'];
-
+$jwtSecret = $_ENV['JWT_SECRET'] ?? 'your_default_secret_here';
 
 // Charger les routes
 $router = require __DIR__ . '/../../src/routes/routes.php';
@@ -26,4 +36,3 @@ if (!empty($basePrefix) && strpos($uri, $basePrefix) === 0) {
 
 // Dispatcher les requêtes
 $router->dispatch($method, $uri);
-

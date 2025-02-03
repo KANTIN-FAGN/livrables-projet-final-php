@@ -37,7 +37,7 @@ if (!$hasLastname) {
 
 // Rediriger vers le formulaire si des erreurs sont présentes
 if (!empty($_SESSION["errors"])) {
-    header('Location: register-form.php');
+    header('Location: /register');
     exit();
 }
 
@@ -52,11 +52,11 @@ $newUserId = $userController->createUser($firstname, $lastname, $email, $hashedP
 
 if ($newUserId === false) {
     $_SESSION["errors"]["general"] = "Erreur lors de la création de l'utilisateur.";
-    header('Location: register-form.php');
+    header('Location: /register');
     exit();
 }
 
 // Tout est correct, afficher un message de succès ou rediriger
 $_SESSION["success"] = "Utilisateur créé avec succès !";
-header('Location: register');
+header('Location: /register');
 exit();
