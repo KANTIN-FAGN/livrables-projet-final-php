@@ -106,6 +106,42 @@ class UserModel
         return $result ?? null; // Retourne un tableau ou null si rien n'est trouvé.
     }
 
+    public function findSkillsUserByID(int $id): array|bool
+    {
+        $query = "SELECT skills.name, user_skills.level
+              FROM user_skills
+              JOIN skills ON user_skills.skill_id = skills.id
+              WHERE user_skills.user_id = :user_id";
+        try {
+            $statement = $this->pdo->prepare($query);
+            $statement->bindParam(':user_id', $id, \PDO::PARAM_INT);
+            $statement->execute();
+
+            // S'assurer que le mode est PDO::FETCH_ASSOC pour retourner un tableau associatif
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
+    public function findPostsUserByID(int $id): array|bool
+    {
+        $query = "SELECT * FROM projects WHERE user_id = :user_id";
+        try {
+            $statement = $this->pdo->prepare($query);
+            $statement->bindParam(':user_id', $id, \PDO::PARAM_INT);
+            $statement->execute();
+
+            // Retourner les résultats sous forme de tableau associatif
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            return false;
+        }
+    }
+
     /**
      * @param int $id
      * @param array $values

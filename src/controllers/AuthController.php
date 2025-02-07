@@ -21,7 +21,7 @@ class AuthController
             $authModel = new \App\Models\UserModel();
 
             // Étape 1 : Récupérer l'utilisateur avec seulement ses informations principales
-            $user = $authModel->findUserByEmail($email); // Pas d'avatar ici
+            $user = $authModel->findUserByEmail($email);
 
             if (!$user || !password_verify($password, $user['password'])) {
                 $_SESSION["errors"]["validation"] = "Email ou mot de passe incorrect.";
@@ -35,6 +35,21 @@ class AuthController
             // Ajouter une image par défaut si l'utilisateur n'a pas encore d'avatar
             $avatar = $profile['avatar'] ?? '/path/to/default/avatar.png';
             $bio = $profile['bio'] ?? 'Pas de biographie renseignée.';
+            $website_link = $profile['website_link'] ?? '';
+
+            $skills = $authModel->findSkillsUserByID($user['id']);// Récupère les compétences et niveaux
+            if (is_array($skills)) {
+                foreach ($skills as &$skill) {
+                    $skill = (array)$skill;
+                }
+            }
+
+            $posts = $authModel->findPostsUserByID($user['id']); // Récupère les posts
+            if (is_array($posts)) {
+                foreach ($posts as &$post) {
+                    $post = (array)$post;
+                }
+            }
 
             // Étape 3 : Générer le token JWT avec les informations utilisateur et l'avatar
             $payload = [
@@ -44,7 +59,10 @@ class AuthController
                 'lastname' => $user['lastname'],
                 'bio' => $bio,
                 'role' => $user['role'],
+                'website_link' => $website_link,
                 'avatar' => $avatar,
+                'skills' => $skills,
+                'posts' => $posts,
                 'iat' => time(),
                 'exp' => time() + 3600
             ];

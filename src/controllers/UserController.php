@@ -36,8 +36,12 @@ class UserController
     public function userExists($email): bool
     {
         $user =  $this->userModel->findUserByEmail($email);
-
         return $user !== false;
+    }
+
+    public function getSkillsUser($id) {
+        $user = $this->userModel->findSkillsUserByID($id);
+        return $user;
     }
 
     /**

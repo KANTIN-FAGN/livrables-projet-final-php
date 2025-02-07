@@ -1,5 +1,5 @@
 <?php
-session_start();
+include_once BASE_PATH . 'src/includes/bootstrap.php';
 
 // Récupérer les erreurs éventuelles et les supprimer pour ne pas les afficher après rechargement
 $errors = isset($_SESSION["errors"]) ? $_SESSION["errors"] : [];

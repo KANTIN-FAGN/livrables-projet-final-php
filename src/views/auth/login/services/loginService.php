@@ -1,6 +1,6 @@
 <?php
 
-session_start(); // Assurez-vous que les sessions sont bien démarrées
+include_once BASE_PATH . 'src/includes/bootstrap.php';
 
 require_once dirname(__DIR__, 4) . '/../vendor/autoload.php';
 
