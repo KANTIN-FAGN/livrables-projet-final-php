@@ -44,7 +44,7 @@ $hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8'
     <section class="profile-container">
         <div class="profile-global">
             <div class="profile-edit-container">
-                <a href="/profile/edit-profile/<?= $userData['id'] ?>">
+                <a href="/profile/edit">
                     <button class="profile-edit-button">
                         Modifier mon profil
                     </button>

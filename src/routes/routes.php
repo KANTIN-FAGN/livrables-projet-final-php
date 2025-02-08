@@ -1,6 +1,7 @@
 <?php
 
 use Core\Router;
+use Middlewares\OwnerMiddleware;
 
 // Crée une instance de Router
 $router = new Router();
@@ -14,7 +15,11 @@ $router->add('GET', '/', function () use ($controller) {
 
 $router->add('GET', '/profile', function () use ($controller) {
     $controller->profile();
-});
+}, [OwnerMiddleware::class]);
+$router->add('POST', '/profile/edit', function () use ($controller) {
+    $controller->editProfile();
+}, [OwnerMiddleware::class]);
+
 
 $router->add('GET', '/register', function () use ($controller) {
     $controller->register();

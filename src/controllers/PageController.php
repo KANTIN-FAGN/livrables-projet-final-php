@@ -47,4 +47,8 @@ class PageController
     {
         include_once '../views/profile/profile.php';
     }
+    public static function editProfile()
+    {
+        include_once '../views/editProfile/editProfile.php';
+    }
 }

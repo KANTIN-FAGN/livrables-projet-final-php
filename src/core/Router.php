@@ -1,43 +1,54 @@
 <?php
-// src/core/Router.php
 
 namespace Core;
 
 class Router
 {
-    private array $routes = [];
+    private $routes = [];
+    private $middlewares = [];
 
-    public function add(string $method, string $path, callable|array $callback): void
+    public function add($method, $path, $callback, $middlewares = [])
     {
         $this->routes[] = [
-            'method' => strtoupper($method),
-            'path' => "#^" . preg_replace('#\{[a-zA-Z0-9_]+\}#', '([a-zA-Z0-9_\-]+)', $path) . "$#",
-            'callback' => $callback
+            'method' => $method,
+            'path' => $path,
+            'callback' => $callback,
+            'middlewares' => $middlewares
         ];
     }
-    public function dispatch(string $method, string $uri): void
+
+    public function dispatch($method, $path)
     {
         foreach ($this->routes as $route) {
-            if ($route['method'] === strtoupper($method) && preg_match($route['path'], $uri, $matches)) {
-                array_shift($matches); // Supprimer $match complet
-                $callback = $route['callback'];
-
-                // Vérifiez si le callback est un callable
-                if (is_array($callback) && class_exists($callback[0]) && method_exists($callback[0], $callback[1])) {
-                    $callback = [new $callback[0], $callback[1]];
+            if ($route['method'] === $method && $this->match($route['path'], $path, $params)) {
+                // Exécute tous les middlewares attachés à cette route
+                foreach ($route['middlewares'] as $middleware) {
+                    $middlewareInstance = new $middleware();
+                    $middlewareInstance->handle($params);
                 }
 
-                if (is_callable($callback)) {
-                    call_user_func_array($callback, $matches);
-                } else {
-                    throw new \Exception('Route callback is not callable');
-                }
-
+                // Exécute la route si les middlewares sont passés
+                call_user_func_array($route['callback'], $params);
                 return;
             }
         }
 
+        // Si aucune route ne correspond, affiche une erreur 404
         http_response_code(404);
-        echo "404 - Route not found";
+        echo "Page non trouvée";
+    }
+
+    private function match($routePath, $currentPath, &$params)
+    {
+        $pattern = preg_replace('#\{[a-zA-Z_]+\}#', '([a-zA-Z0-9_\-]+)', $routePath);
+        $pattern = "#^$pattern$#";
+
+        if (preg_match($pattern, $currentPath, $matches)) {
+            array_shift($matches); // Supprime la correspondance complète
+            $params = $matches;
+            return true;
+        }
+
+        return false;
     }
 }
