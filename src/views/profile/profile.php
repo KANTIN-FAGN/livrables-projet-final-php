@@ -2,26 +2,22 @@
 
 include_once BASE_PATH . 'src/includes/bootstrap.php';
 
-// Gestion du chemin de l'avatar
-$defaultAvatarPathPublic = $_ENV['BASE_URL'] . '/img/avatars/default.png';
-$defaultAvatarPathFile = BASE_PATH . 'public/img/avatars/default.png'; // Chemin système
-
-$avatarPathPublic = isset($userData['avatar'])
+// Chemin URL pour afficher l'image (public)
+$defaultAvatarPathPublic = $_ENV['BASE_URL'] . '/img/avatars/default.png'; // Avatar par défaut
+$avatarPathPublic = isset($userData['avatar']) && !empty($userData['avatar'])
     ? $_ENV['BASE_URL'] . '/img/avatars/' . $userData['avatar']
     : $defaultAvatarPathPublic;
 
-$avatarPathFile = isset($userData['avatar'])
-    ? BASE_PATH . 'public/img/avatars/' . $userData['avatar']
+// Chemin système pour vérifier l'existence du fichier (serveur)
+$defaultAvatarPathFile = $_ENV['BASE_URL'] . '/img/avatars/default.png';; // Fichier par défaut
+$avatarPathFile = isset($userData['avatar']) && !empty($userData['avatar'])
+    ? $_ENV['BASE_URL'] . '/img/avatars/' . $userData['avatar']
     : $defaultAvatarPathFile;
 
-// Vérification de l'existence du fichier sur le serveur
+// Validation : si le fichier n'existe pas, afficher le chemin de l'image par défaut
 if (!file_exists($avatarPathFile)) {
-    $avatarPathPublic = $defaultAvatarPathPublic;
+    $avatarPathPublic = $defaultAvatarPathPublic; // Utiliser le chemin public par défaut
 }
-
-$userWebsite = $userData['website'] ?? null;
-$displayWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8') : 'Website';
-$hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8') : '#';
 
 ?>
 
@@ -53,7 +49,7 @@ $hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8'
                 </button>
             </div>
             <div class="profile-avatar">
-                <img src="<?= htmlspecialchars($avatarPathPublic) ?>" alt="">
+                <img src="<?= htmlspecialchars($avatarPathFile) ?>" alt="Photo de profil de <?= htmlspecialchars($userData['firstname'] . ' ' . $userData['lastname']) ?>">
             </div>
             <div class="profile-content">
                 <div class="profile-content-global">

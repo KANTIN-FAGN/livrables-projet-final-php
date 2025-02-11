@@ -40,7 +40,7 @@ class AuthController
             $profile = $authModel->findProfileByUserId($user['id']);
 
             // Définir des valeurs par défaut si l'utilisateur n'a pas renseigné certaines informations
-            $avatar = $profile['avatar'] ?? '/path/to/default/avatar.png'; // Avatar par défaut
+            $avatar = $profile['avatar'] ?? ''; // Avatar par défaut
             $bio = $profile['bio'] ?? 'Pas de biographie renseignée.';
             $website_link = $profile['website_link'] ?? '';
 
@@ -124,11 +124,18 @@ class AuthController
      */
     public function regenerateToken($updatedUserData)
     {
+        $authModel = new \App\Models\UserModel(); // Instanciation du modèle utilisateur
         // Vérification que le cookie JWT existe déjà
         if (isset($_COOKIE['access_token'])) {
             // Récupération des compétences utilisateur
             $userModel = new \App\Models\UserModel();
             $skills = $updatedUserData['skills'] ?? $userModel->findSkillsUserByID($updatedUserData['id']);
+
+            // Étape 2 : Récupération du profil utilisateur (avatar, bio, site web)
+            $profile = $authModel->findProfileByUserId($updatedUserData['id']);
+
+            // Définir des valeurs par défaut si l'utilisateur n'a pas renseigné certaines informations
+            $avatar = $profile['avatar'] ?? '';
 
             // Préparation du nouveau payload pour le JWT
             $newPayload = [
@@ -139,7 +146,7 @@ class AuthController
                 'bio' => $updatedUserData['bio'] ?? 'Pas de biographie renseignée.',
                 'role' => $updatedUserData['role'],
                 'website_link' => $updatedUserData['website_link'] ?? '',
-                'avatar' => $updatedUserData['avatar'] ?? '/path/to/default/avatar.png',
+                'avatar' => $avatar,
                 'skills' => $skills,
                 'iat' => time(),
                 'exp' => time() + 3600

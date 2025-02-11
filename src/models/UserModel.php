@@ -124,6 +124,7 @@ class UserModel
             $statement->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $statement->execute();
             $result = $statement->fetch(PDO::FETCH_ASSOC);
+            error_log('data = ' . print_r($result, true));
 
             // Retourner null si aucun résultat n'est trouvé
             return $result !== false ? $result : null;
@@ -260,6 +261,16 @@ class UserModel
             error_log("Erreur dans updateProfile : " . $e->getMessage());
             return 0; // Toujours retour 0 en cas de problème
         }
+    }
+
+
+    public function updateAvatar(int $id, string $avatarPath): bool
+    {
+        $sql = "UPDATE profiles SET avatar = :avatar WHERE user_id = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(':avatar', $avatarPath, PDO::PARAM_STR);
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        return $statement->execute();
     }
 
     /**

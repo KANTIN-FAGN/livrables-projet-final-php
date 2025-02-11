@@ -20,9 +20,22 @@ $skills = $skillController->getSkills();
                 </svg>
             </button>
         </div>
-        <form action="/profile/edit" method="POST">
+        <form action="/profile/edit" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($userData['id'], ENT_QUOTES) ?>">
 
+            <div>
+                <h3>
+                    Photo de profil
+                </h3>
+                <div class="form-avatar">
+                    <label for="avatar">
+                        <!-- Image de profil actuelle avec ID "avatar-preview" -->
+                        <img src="<?= htmlspecialchars($avatarPathFile) ?>" alt="Avatar" class="avatar" id="avatar-preview">
+                    </label>
+                    <!-- Input file pour sélectionner l'image -->
+                    <input type="file" name="avatar" id="avatar" accept="image/*">
+                </div>
+            </div>
             <div>
                 <h3>
                     Informations personnelles

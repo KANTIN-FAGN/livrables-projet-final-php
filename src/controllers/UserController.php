@@ -162,6 +162,12 @@ class UserController
         return is_numeric($result) ? intval($result) : 0;
     }
 
+    public function updateAvatar(int $id, string $avatarPath): bool
+    {
+        $result = $this->userModel->updateAvatar($id, $avatarPath);
+        return $result;
+    }
+
     /**
      * Récupère les informations complètes d'un utilisateur par son ID
      *

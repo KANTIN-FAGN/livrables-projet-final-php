@@ -35,6 +35,20 @@
 .formEdit .formEdit-container form {
   padding: 2rem 1rem;
 }
+.formEdit .formEdit-container form .form-avatar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.formEdit .formEdit-container form .form-avatar .avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 .formEdit .formEdit-container form .formEdit-container-input {
   margin-top: 10px;
   width: 100%;

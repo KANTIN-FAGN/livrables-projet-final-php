@@ -25,10 +25,56 @@ try {
     $skills = $_POST['skills'] ?? [];
     $levels = $_POST['levels'] ?? [];
 
+    $avatar = $_POST['avatar'] ?? null;
+
     // Validation : vérifier l'ID utilisateur
     if (empty($id) || !is_numeric($id)) {
         throw new InvalidArgumentException("L'ID utilisateur est invalide ou manquant.");
     }
+
+    // Instanciation du contrôleur utilisateur
+    $userController = new UserController();
+
+    // Vérifier la présence d'un fichier uploadé dans $_FILES['avatar']
+    if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+        // Récupérer temporairement le chemin du fichier et ses informations
+        $temporaryPath = $_FILES['avatar']['tmp_name'];
+        $originalName = $_FILES['avatar']['name'];
+
+        // Extraire l'extension du fichier
+        $fileParts = explode('.', $originalName);
+        $extension = strtolower(end($fileParts));
+
+        // Vérifier que l'extension du fichier est valide
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array($extension, $allowedExtensions)) {
+            throw new RuntimeException("Extension de fichier non autorisée. Fichiers acceptés : " . implode(', ', $allowedExtensions));
+        }
+
+        // Générer un nouveau nom pour l'image avec les informations de l'utilisateur
+        $prenom = isset($userData['firstname']) ? strtolower($userData['firstname']) : 'undefined';
+        $nom = isset($userData['lastname']) ? strtolower($userData['lastname']) : 'undefined';
+        $id = $userData['id'] ?? '0';
+        $date = date('Ymd_His');
+
+        $newFileName = $nom . '_' . $prenom . '_' . $id . '_' . $date . '.' . $extension;
+
+        // Définir le dossier pour les uploads
+        $uploadDir = 'img/avatars/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true); // Créer le dossier s'il n'existe pas
+        }
+
+        // Déplacer le fichier vers le dossier final
+        $finalPath = $uploadDir . $newFileName;
+        if (!move_uploaded_file($temporaryPath, $finalPath)) {
+            throw new RuntimeException("Erreur lors du téléchargement de l'image.");
+        }
+
+        // Mettre à jour l'avatar en base de données
+        $userController->updateAvatar($id, $newFileName);
+    }
+
 
     // Préparation des données pour les tables 'users' et 'profiles'
     $userUpdateData = array_filter([
@@ -40,9 +86,6 @@ try {
         'bio' => $bio,
         'website_link' => $website_link
     ]);
-
-    // Instanciation du contrôleur utilisateur
-    $userController = new UserController();
 
     // Initialisation des lignes affectées (somme totale)
     $updatedRows = 0;
