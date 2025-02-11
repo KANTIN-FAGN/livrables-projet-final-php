@@ -43,8 +43,8 @@ $skills = $skillController->getSkills();
                               required><?= htmlspecialchars($userData['bio'], ENT_QUOTES) ?></textarea>
                 </div>
                 <div class="formEdit-container-input">
-                    <label for="website">Site web</label>
-                    <input type="text" name="website" id="website"
+                    <label for="website_link">Site web</label>
+                    <input type="text" name="website_link" id="website_link"
                            value="<?= htmlspecialchars($userData['website_link'], ENT_QUOTES) ?>">
                 </div>
             </div>

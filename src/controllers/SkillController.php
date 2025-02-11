@@ -27,9 +27,6 @@ class SkillController
         // Appel de la méthode `getAllSkills` sur le modèle pour récupérer les données des compétences
         $skills = $this->skillModel->getAllSkills();
 
-        // Journalisation des données récupérées pour débogage
-        error_log("Données dans SkillController : " . print_r($skills, true));
-
         // Retourne les compétences au format récupéré depuis le modèle
         return $skills;
     }

@@ -21,7 +21,7 @@ try {
     $firstname = $_POST['firstname'] ?? null;
     $lastname = $_POST['lastname'] ?? null;
     $bio = $_POST['bio'] ?? null;
-    $website = $_POST['website'] ?? null;
+    $website_link = $_POST['website_link'] ?? null;
     $skills = $_POST['skills'] ?? [];
     $levels = $_POST['levels'] ?? [];
 
@@ -38,7 +38,7 @@ try {
 
     $profileUpdateData = array_filter([
         'bio' => $bio,
-        'website' => $website
+        'website_link' => $website_link
     ]);
 
     // Instanciation du contrôleur utilisateur
