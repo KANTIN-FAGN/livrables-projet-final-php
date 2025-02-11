@@ -64,7 +64,10 @@ class UserModel
      */
     public function findUserByID(string $id): array|bool
     {
-        $sql = "SELECT * FROM $this->table WHERE id = :id";
+        $sql = "SELECT u.id, u.firstname, u.lastname, p.bio, p.website_link 
+            FROM users u
+            LEFT JOIN profiles p ON u.id = p.user_id
+            WHERE u.id = :id";
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->bindParam(":id", $id);
@@ -147,30 +150,96 @@ class UserModel
      * @param array $values
      * @return int|bool
      */
-    public function updateUser(int $id, array $values): int|bool
+
+    public function updateUser(int $id, array $values): array|bool
     {
+        if (empty($values)) {
+            error_log("updateUser : Aucun changement détecté pour ID=$id.");
+            return false;
+        }
+
+        // **Modifier ou enrichir le payload avant la mise à jour**
+        if (isset($values['firstname'])) {
+            $values['firstname'] = ucfirst(strtolower($values['firstname'])); // Normaliser la casse du prénom
+        }
+        if (isset($values['lastname'])) {
+            $values['lastname'] = ucfirst(strtolower($values['lastname'])); // Normaliser la casse du nom
+        }
+
+        // Construire la requête SQL
         $sql = "UPDATE $this->table SET ";
         $keys = array_keys($values);
         $arrayKeys = [];
         foreach ($keys as $key) {
-            $str = $key . "=:" . $key;
-            $arrayKeys[] = $str;
+            $arrayKeys[] = "$key = :$key";
         }
         $keysStr = implode(', ', $arrayKeys);
-        $key = $this->keyName;
-        $sql .= $keysStr . " WHERE $key=:id";
+        $sql .= $keysStr . " WHERE $this->keyName = :id";
+
         try {
             $statement = $this->pdo->prepare($sql);
 
+            // Lier les valeurs SQL
             foreach ($values as $key => $val) {
-                $statement->bindParam(":$key", $val);
+                $statement->bindValue(":$key", $val);
             }
-            $statement->bindParam(":id", $id);
+            $statement->bindValue(":id", $id, PDO::PARAM_INT);
+
+            // Exécuter la mise à jour
             $statement->execute();
-            return $statement->rowCount();
+
+            // Vérifier si la mise à jour a réussi
+            $affectedRows = $statement->rowCount();
+            error_log("updateUser : $affectedRows lignes modifiées pour ID=$id.");
+
+            // **Toujours renvoyer les nouvelles données de l'utilisateur après mise à jour**
+            return $this->findUserByID($id);
+
         } catch (Exception $e) {
-            echo $e->getMessage();
+            error_log("Erreur SQL dans updateUser pour ID=$id : " . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function updateProfile(int $userId, array $values): array|bool
+    {
+        if (empty($values)) {
+            error_log("updateProfile : Aucun changement détecté pour userId=$userId.");
             return false;
+        }
+
+        // Construire la requête SQL dynamique
+        $sql = "UPDATE profiles SET ";
+        $keys = array_keys($values);
+        $arrayKeys = [];
+        foreach ($keys as $key) {
+            $arrayKeys[] = "$key = :$key";
+        }
+        $keysStr = implode(', ', $arrayKeys);
+        $sql .= $keysStr . " WHERE user_id = :user_id";
+
+        try {
+            $statement = $this->pdo->prepare($sql);
+
+            // Lier les valeurs SQL
+            foreach ($values as $key => $val) {
+                $statement->bindValue(":$key", $val);
+            }
+            $statement->bindValue(":user_id", $userId, PDO::PARAM_INT);
+
+            // Exécuter la mise à jour
+            $statement->execute();
+
+            // Vérifier si la mise à jour a réussi
+            $affectedRows = $statement->rowCount();
+            error_log("updateProfile : $affectedRows lignes modifiées pour user_id=$userId.");
+
+            // **Toujours renvoyer les nouvelles données du profil après mise à jour**
+            return $this->findProfileByUserId($userId);
+
+        } catch (Exception $e) {
+            error_log("Erreur SQL dans updateProfile pour user_id=$userId : " . $e->getMessage());
+            throw $e;
         }
     }
 

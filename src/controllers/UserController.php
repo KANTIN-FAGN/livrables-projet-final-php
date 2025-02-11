@@ -44,6 +44,54 @@ class UserController
         return $user;
     }
 
+    public function updateUser($id, $data): int
+    {
+        if (empty($id) || empty($data)) {
+            throw new \Exception("Les données ou l'identifiant utilisateur sont invalides.");
+        }
+
+        error_log("Mise à jour utilisateur pour ID=$id avec données : " . json_encode($data));
+
+        // Met à jour les données et retourne directement le nombre de lignes affectées
+        $affectedRows = $this->userModel->updateUser((int)$id, $data);
+        return is_int($affectedRows) ? $affectedRows : 0; // Toujours un entier
+    }
+
+    public function updateProfile($id, $data): int
+    {
+        $rowsUpdated = 0;
+
+        if (isset($data['bio'])) {
+            $bio = $data['bio'];
+            unset($data['bio']);
+            $website_link = $data['website'];
+            unset($data['website']);
+
+            // Met à jour la biographie et ajoute au compteur
+            $bioUpdated = $this->userModel->updateProfile($id, ['bio' => $bio]);
+            if (is_int($bioUpdated)) {
+                $rowsUpdated += $bioUpdated;
+            }
+
+            $websiteUpdated = $this->userModel->updateProfile($id, ['website_link' => $website_link]);
+            if (is_int($websiteUpdated)) {
+                $rowsUpdated += $websiteUpdated;
+            }
+            error_log("Mise à jour de la biographie et du site web pour utilisateur ID=$id");
+
+        }
+
+        if (!empty($data)) {
+            // Met à jour les autres données et ajoute au compteur
+            $otherUpdated = $this->userModel->updateUser($id, $data);
+            if (is_int($otherUpdated)) {
+                $rowsUpdated += $otherUpdated;
+            }
+        }
+
+        return $rowsUpdated; // Retourne uniquement le nombre de lignes mises à jour
+    }
+
     /**
      * @param $id
      * @return array|bool

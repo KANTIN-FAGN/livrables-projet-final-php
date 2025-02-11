@@ -55,17 +55,17 @@ class AuthController
             $payload = [
                 'email' => $user['email'],
                 'id' => $user['id'],
-                'firstname' => $user['firstname'],
-                'lastname' => $user['lastname'],
+                'firstname' => ucfirst(strtolower($user['firstname'])),
+                'lastname' => ucfirst(strtolower($user['lastname'])),
                 'bio' => $bio,
                 'role' => $user['role'],
                 'website_link' => $website_link,
                 'avatar' => $avatar,
                 'skills' => $skills,
-                'posts' => $posts,
                 'iat' => time(),
                 'exp' => time() + 3600
             ];
+
             $jwt = \App\core\services\JwtService::generateToken($payload);
 
             // Étape 4 : Définir un cookie sécurisé
@@ -100,5 +100,40 @@ class AuthController
         setcookie("access_token", "", time() - 3600, "/", "", false, true);
         header('Location: /');
         exit;
+    }
+
+    public function regenerateToken($updatedUserData) {
+        if (isset($_COOKIE['access_token'])) {
+            // Récupérer les compétences depuis UserModel si elles ne sont pas dans $updatedUserData
+            $userModel = new \App\Models\UserModel();
+            $skills = $updatedUserData['skills'] ?? $userModel->findSkillsUserByID($updatedUserData['id']);
+
+            $newPayload = [
+                'email' => $updatedUserData['email'],
+                'id' => $updatedUserData['id'],
+                'firstname' => ucfirst(strtolower($updatedUserData['firstname'])),
+                'lastname' => ucfirst(strtolower($updatedUserData['lastname'])),
+                'bio' => $updatedUserData['bio'] ?? 'Pas de biographie renseignée.',
+                'role' => $updatedUserData['role'],
+                'website_link' => $updatedUserData['website_link'] ?? '',
+                'avatar' => $updatedUserData['avatar'] ?? '/path/to/default/avatar.png',
+                'skills' => $skills,
+                'iat' => time(),
+                'exp' => time() + 3600
+            ];
+
+            $newJwt = \App\core\services\JwtService::generateToken($newPayload);
+            setcookie(
+                "access_token",
+                $newJwt,
+                [
+                    "expires" => time() + 3600,
+                    "path" => "/",
+                    "secure" => true,
+                    "httponly" => true,
+                    "samesite" => "Strict"
+                ]
+            );
+        }
     }
 }

@@ -21,9 +21,14 @@ class JwtService
     // Générer un token
     public static function generateToken(array $payload): string
     {
-        self::initialize(); // S'assurer que la clé est initialisée
+        self::initialize();
         $payload['iat'] = time();
-        $payload['exp'] = time() + 3600; // Valide pour 1 heure
+        $payload['exp'] = time() + 3600; // Token valide pendant 1 heure
+
+        // Ajoutez des champs nécessaires ici
+        if (!isset($payload['id'])) {
+            error_log("JwtService::generateToken - Avertissement : L'ID utilisateur n'est pas défini dans le payload.");
+        }
 
         return JWT::encode($payload, self::$secretKey, self::$algo);
     }

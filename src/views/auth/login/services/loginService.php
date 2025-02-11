@@ -18,7 +18,7 @@ if (!$hasPassword) {
 }
 
 if (!$hasEmail || !$hasPassword) {
-    header('Location: ../login/login.php', true, 400);
+    header('Location: /login', true, 400);
     exit;
 }
 
@@ -28,6 +28,6 @@ try {
     $authController->login();
 } catch (Exception $e) {
     $_SESSION["errors"]["exception"] = $e->getMessage();
-    header('Location: ../login/login.php', true, 500);
+    header('Location: /login', true, 500);
     exit;
 }

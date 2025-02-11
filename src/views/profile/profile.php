@@ -36,7 +36,11 @@ $hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8'
         <?= file_get_contents(BASE_PATH . 'src/public/style.css') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/profile/profile.scss') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/profile/components/postsCard/postsCard.scss') ?>
+        <?= file_get_contents(BASE_PATH . 'src/views/profile/components/formEdit/formEdit.scss') ?>
     </style>
+    <script>
+        <?= file_get_contents(BASE_PATH . 'src/views/profile/profile.js') ?>
+    </script>
 </head>
 <body>
 <main>
@@ -44,11 +48,9 @@ $hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8'
     <section class="profile-container">
         <div class="profile-global">
             <div class="profile-edit-container">
-                <a href="/profile/edit">
-                    <button class="profile-edit-button">
-                        Modifier mon profil
-                    </button>
-                </a>
+                <button class="profile-edit-button" onclick="toggleForm()">
+                    Modifier mon profil
+                </button>
             </div>
             <div class="profile-avatar">
                 <img src="<?= htmlspecialchars($avatarPathPublic) ?>" alt="">
@@ -104,6 +106,7 @@ $hrefWebsite = $userWebsite ? htmlspecialchars($userWebsite, ENT_QUOTES, 'UTF-8'
             </div>
         </div>
     </section>
+    <?php include BASE_PATH . 'src/views/profile/components/formEdit/formEdit.php'; ?>
 </main>
 </body>
 </html>

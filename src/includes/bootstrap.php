@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('log_errors', '1'); // Facultatif : enregistre les erreurs dans un fichier
+error_log(BASE_PATH . 'logs/php_errors.log'); // Définit un fichier pour les logs si nécessaire
 
 // Vérifie si une session est déjà démarrée, sinon démarre une session
 if (session_status() !== PHP_SESSION_ACTIVE) {
