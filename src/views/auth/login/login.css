@@ -54,6 +54,15 @@ main .container .login-form .input-field input:focus + label {
   top: -20px;
   transition: all 0.3s ease;
 }
+main .container .login-form .link {
+  text-decoration: none;
+  margin-bottom: 25px;
+  color: #636363;
+}
+main .container .login-form .link:hover {
+  text-decoration: underline;
+  color: #009aff;
+}
 main .container .login-form .btn-submit {
   width: 100%;
   padding: 10px;

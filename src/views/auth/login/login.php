@@ -47,6 +47,9 @@ unset($_SESSION["errors"]);
                     Mot de passe
                 </label>
             </div>
+            <a href="/register" class="link">
+                Pas de compte ? Inscrivez-vous
+            </a>
             <input type="submit" value="Connexion" class="btn-submit">
         </form>
     </div>

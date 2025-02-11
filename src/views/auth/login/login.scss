@@ -52,6 +52,15 @@ main {
           }
         }
       }
+      .link {
+        text-decoration: none;
+        margin-bottom: 25px;
+        color: #636363;
+        &:hover {
+          text-decoration: underline;
+          color: #009aff;
+        }
+      }
       .btn-submit {
         width: 100%;
         padding: 10px;

@@ -1,86 +1,92 @@
 <?php
-error_reporting(E_ALL); // Activer les rapports d'erreurs
-ini_set('display_errors', 1); // Afficher les erreurs
-ini_set('display_startup_errors', 1); // Afficher les erreurs au démarrage
+// Activer les rapports d'erreurs pour le développement
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
 
-// Lien vers les dépendances nécessaires
+// Inclusion des dépendances nécessaires via le fichier bootstrap
 require_once '../includes/bootstrap.php';
 
 use App\Controllers\UserController;
-use App\controllers\AuthController;
+use App\Controllers\AuthController;
 
 try {
-    // Vérifiez et démarrez une session si elle n'est pas déjà active
+    // S'assurer que la session est active
     if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start(); // Démarrage de la session utilisateur indispensable pour stocker les messages ou données de session
+        session_start();
     }
 
-    // Collecte des données envoyées via le formulaire en méthode POST
-    // Utilisation de l'opérateur null coalescent (??) pour fournir des valeurs par défaut si les champs sont absents
-    $id = $_POST['id'] ?? null; // Identifiant utilisateur
-    $firstname = $_POST['firstname'] ?? null; // Prénom de l'utilisateur
-    $lastname = $_POST['lastname'] ?? null; // Nom de l'utilisateur
-    $bio = $_POST['bio'] ?? null; // Biographie de l'utilisateur
-    $website = $_POST['website'] ?? null; // URL du site web personnel de l'utilisateur
-    $skills = $_POST['skills'] ?? []; // Liste des compétences sélectionnées
-    $levels = $_POST['levels'] ?? []; // Liste des niveaux correspondant aux compétences
+    // Récupérer les données de la requête POST avec des valeurs par défaut si elles sont absentes
+    $id = $_POST['id'] ?? null;
+    $firstname = $_POST['firstname'] ?? null;
+    $lastname = $_POST['lastname'] ?? null;
+    $bio = $_POST['bio'] ?? null;
+    $website = $_POST['website'] ?? null;
+    $skills = $_POST['skills'] ?? [];
+    $levels = $_POST['levels'] ?? [];
 
-    // Validation : vérifier si l'ID est valide (non vide et numérique)
+    // Validation : vérifier l'ID utilisateur
     if (empty($id) || !is_numeric($id)) {
-        throw new Exception("L'ID utilisateur est invalide ou manquant."); // Lancer une exception si la validation échoue
+        throw new InvalidArgumentException("L'ID utilisateur est invalide ou manquant.");
     }
 
-    // Préparation des données pour la mise à jour
-    $userUpdateData = []; // Données pour la table 'users'
-    $profileUpdateData = []; // Données pour la table 'profiles'
+    // Préparation des données pour les tables 'users' et 'profiles'
+    $userUpdateData = array_filter([
+        'firstname' => $firstname,
+        'lastname' => $lastname
+    ]);
 
-    // Construction des données à mettre à jour dans la table 'users'
-    if (!empty($firstname)) {
-        $userUpdateData['firstname'] = $firstname; // Ajout du prénom
-    }
-    if (!empty($lastname)) {
-        $userUpdateData['lastname'] = $lastname; // Ajout du nom
-    }
+    $profileUpdateData = array_filter([
+        'bio' => $bio,
+        'website' => $website
+    ]);
 
-    // Construction des données à mettre à jour dans la table 'profiles'
-    if (!empty($bio)) {
-        $profileUpdateData['bio'] = $bio; // Ajout de la biographie
-    }
-    if (!empty($website)) {
-        $profileUpdateData['website'] = $website; // Ajout de l'URL du site web
-    }
+    // Instanciation du contrôleur utilisateur
+    $userController = new UserController();
 
-    // Initialiser le contrôleur utilisateur pour interagir avec la base de données via le modèle
-    $userController = new UserController(); // Instance du contrôleur utilisateur
-
-    // Variable pour suivre le nombre total de lignes affectées par les mises à jour
+    // Initialisation des lignes affectées (somme totale)
     $updatedRows = 0;
 
-    // Mise à jour des données dans la table 'users' si nécessaire
+    // Mise à jour des données 'users' si nécessaire
     if (!empty($userUpdateData)) {
-        $updatedRows += $userController->updateUser($id, $userUpdateData); // Appel à la méthode de mise à jour
+        $userRows = $userController->updateUser($id, $userUpdateData);
+        error_log("Lignes mises à jour dans users : " . json_encode($userRows));
+        $updatedRows += is_numeric($userRows) ? intval($userRows) : 0;
     }
 
-    // Mise à jour des données dans la table 'profiles' si nécessaire
+    // Mise à jour des données 'profiles' si nécessaire
     if (!empty($profileUpdateData)) {
-        $updatedRows += $userController->updateProfile($id, $profileUpdateData); // Appel à la méthode de mise à jour
+        // Vérifiez si le profil existe
+        if (!$userController->profileExists($id)) {
+            // Créez un profil par défaut si le profil n'existe pas
+            $userController->createDefaultProfile($id);
+        }
+
+        $profileRows = $userController->updateProfile($id, $profileUpdateData);
+        error_log("Lignes mises à jour dans profiles : " . json_encode($profileRows));
+        $updatedRows += is_numeric($profileRows) ? intval($profileRows) : 0;
     }
 
-    // Mise à jour des compétences de l'utilisateur s'il y a des compétences et niveaux fournis
-    if (!empty($skills) && !empty($levels) && count($skills) === count($levels)) {
-        $updatedRows += $userController->updateUserSkills($id, $skills, $levels); // Mise à jour des compétences si les données sont cohérentes
+    // Mise à jour des compétences et niveaux si disponibles et valides
+    if (!empty($skills) && !empty($levels)) {
+        if (count($skills) !== count($levels)) {
+            throw new InvalidArgumentException("Le nombre de compétences et de niveaux ne correspond pas.");
+        }
+        $skillsRows = $userController->updateUserSkills($id, $skills, $levels);
+        error_log("Lignes mises à jour dans skills : " . json_encode($skillsRows));
+        $updatedRows += is_numeric($skillsRows) ? intval($skillsRows) : 0;
     }
 
-    // Recharge des données utilisateur mises à jour depuis la base de données pour refléter les changements récents
+    // Récupérer les données utilisateur mises à jour
     $updatedUserData = $userController->getUser($id);
 
-    // Validation : si les données utilisateur mises à jour ne sont pas récupérées, une exception est levée
-    if (!$updatedUserData) {
-        throw new Exception("Impossible de récupérer les données utilisateur mises à jour.");
+    // Validation : s'assurer que les données utilisateur sont bien récupérées
+    if (empty($updatedUserData)) {
+        throw new RuntimeException("Impossible de récupérer les données utilisateur mises à jour.");
     }
 
-    // Mise à jour de la session utilisateur avec les nouvelles données
-    $_SESSION['user'] = $updatedUserData; // Stocke les données de l'utilisateur dans la session pour un accès futur
+    // Mise à jour des données utilisateur dans la session
+    $_SESSION['user'] = $updatedUserData;
 
     // Optionnel : Regénération du token JWT (si vous utilisez une gestion avec JWT pour l'authentification)
     $authController = new AuthController(); // Instance pour gérer les tokens et l'authentification
@@ -98,14 +104,26 @@ try {
     // Redirection après mise à jour
     header('Location: /profile', true, 303); // Redirection vers la page du profil (statut HTTP 303 pour éviter la re-soumission du formulaire)
     exit(); // Terminer le script pour garantir qu'aucune autre sortie n'est envoyée
+
+} catch (InvalidArgumentException $e) {
+    // Gestion des erreurs de validation des données d'entrée
+    http_response_code(400);
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
+    ]);
+} catch (RuntimeException $e) {
+    // Gestion des erreurs liées à la logique ou aux données
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => $e->getMessage()
+    ]);
 } catch (Exception $e) {
-    // En cas d'erreur, journaliser et rediriger
-    echo $e->getMessage();
-    error_log("Erreur dans profileService.php : " . $e->getMessage());
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-    $_SESSION['errors']['exception'] = $e->getMessage();
-    header('Location: /profile', true, 500);
-    exit;
+    // Gestion globale des exceptions (erreurs imprévues)
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Une erreur inattendue s\'est produite : ' . $e->getMessage()
+    ]);
 }

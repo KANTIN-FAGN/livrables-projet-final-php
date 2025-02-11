@@ -123,10 +123,46 @@ class UserModel
             $statement = $this->pdo->prepare($query);
             $statement->bindParam(':user_id', $userId, PDO::PARAM_INT);
             $statement->execute();
-            return $statement->fetch(PDO::FETCH_ASSOC) ?? null;
+            $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+            // Retourner null si aucun résultat n'est trouvé
+            return $result !== false ? $result : null;
         } catch (Exception $e) {
             error_log("Erreur : " . $e->getMessage());
-            return null;
+            return null; // Retourner null en cas d'erreur
+        }
+    }
+
+    /**
+     * Récupère tous les posts (publications) associés à un utilisateur donné, à partir de son identifiant.
+     *
+     * @param int $userId L'identifiant unique de l'utilisateur
+     * @return array Un tableau contenant les publications de l'utilisateur, ou un tableau vide en cas d'erreur ou d'absence de publications
+     */
+    public function findPostsUserByID(int $userId): array
+    {
+        // Requête SQL pour sélectionner toutes les colonnes dans la table "posts" où "user_id" correspond à l'utilisateur donné
+        $query = "SELECT * FROM posts WHERE user_id = :user_id"; // Suppose que la table s'appelle "posts"
+
+        try {
+            // Préparation de la requête SQL avec le PDO (permet de sécuriser la requête en évitant les injections SQL)
+            $statement = $this->pdo->prepare($query);
+
+            // Liaison du paramètre ":user_id" avec la valeur de $userId (de type entier)
+            $statement->bindParam(':user_id', $userId, PDO::PARAM_INT);
+
+            // Exécution de la requête
+            $statement->execute();
+
+            // Récupération de tous les résultats sous forme d'un tableau associatif
+            // Si aucun résultat n'est trouvé, un tableau vide sera retourné
+            return $statement->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            // En cas d'erreur, on journalise un message pour tracer l'erreur
+            error_log("Erreur dans findPostsUserByID : " . $e->getMessage());
+
+            // Retourne un tableau vide pour signaler l'absence de données en cas d'échec
+            return [];
         }
     }
 
@@ -153,80 +189,116 @@ class UserModel
         }
     }
 
-    /**
-     * Met à jour les informations d'un utilisateur
-     *
-     * @param int $id ID de l'utilisateur à mettre à jour
-     * @param array $values Données à mettre à jour (tableau associatif)
-     * @return int|bool Retourne le nombre de lignes affectées ou false en cas d'échec
-     */
-    public function updateUser(int $id, array $values): int|bool
-    {
-        if (empty($values)) { // Validation
-            return false;
-        }
 
-        // Construire la requête SQL dynamique "UPDATE"
-        $sql = "UPDATE $this->table SET ";
-        $columns = [];
-        foreach ($values as $key => $value) {
-            $columns[] = "$key = :$key";
+    /**
+     * Met à jour les informations générales d'un utilisateur dans la table 'users'
+     *
+     * @param int $id Identifiant de l'utilisateur
+     * @param array $data Données à mettre à jour (clé => valeur)
+     * @return int Retourne le nombre de lignes affectées
+     */
+    public function updateUser(int $id, array $data): int
+    {
+        if (empty($data)) {
+            return 0; // Aucun changement
         }
-        $sql .= implode(', ', $columns) . " WHERE $this->keyName = :id";
 
         try {
-            $statement = $this->pdo->prepare($sql);
-
-            // Assignation des valeurs
-            foreach ($values as $key => $val) {
-                $statement->bindParam(":$key", $val);
+            $setClause = [];
+            foreach ($data as $column => $value) {
+                $setClause[] = "$column = :$column";
             }
-            $statement->bindParam(":id", $id, PDO::PARAM_INT);
+
+            $query = "UPDATE users SET " . implode(', ', $setClause) . " WHERE id = :id";
+            $statement = $this->pdo->prepare($query);
+
+            foreach ($data as $column => $value) {
+                $statement->bindValue(":$column", $value);
+            }
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
 
             $statement->execute();
-            return $statement->rowCount(); // Retourne le nombre de lignes affectées
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            return false;
+
+            return $statement->rowCount(); // Retourner strictement un int
+        } catch (\Exception $e) {
+            error_log("Erreur dans updateUser : " . $e->getMessage());
+            return 0; // En cas d'erreur, toujours retourner 0
         }
     }
 
     /**
-     * Met à jour un profil utilisateur à partir de son ID
+     * Met à jour le profil utilisateur (ex. bio, site web) dans la table 'profiles'
      *
-     * @param int $userId ID de l'utilisateur
-     * @param array $values Données du profil à mettre à jour
-     * @return array|bool Retourne les nouvelles données du profil ou false en cas d'échec
+     * @param int $id Identifiant de l'utilisateur
+     * @param array $data Données à mettre à jour (clé => valeur)
+     * @return int Retourne le nombre de lignes affectées
      */
-    public function updateProfile(int $userId, array $values): array|bool
+    public function updateProfile(int $id, array $data): int
     {
-        if (empty($values)) {
-            return false;
+        if (empty($data)) {
+            return 0; // Aucun changement
         }
-
-        // Génération de la requête SQL dynamique
-        $sql = "UPDATE profiles SET ";
-        $columns = [];
-        foreach ($values as $key => $value) {
-            $columns[] = "$key = :$key";
-        }
-        $sql .= implode(', ', $columns) . " WHERE user_id = :user_id";
 
         try {
-            $statement = $this->pdo->prepare($sql);
-
-            // Liaison des paramètres
-            foreach ($values as $key => $val) {
-                $statement->bindParam(":$key", $val);
+            $setClause = [];
+            foreach ($data as $column => $value) {
+                $setClause[] = "$column = :$column";
             }
-            $statement->bindParam(":user_id", $userId, PDO::PARAM_INT);
+
+            $query = "UPDATE profiles SET " . implode(', ', $setClause) . " WHERE user_id = :id";
+            $statement = $this->pdo->prepare($query);
+
+            foreach ($data as $column => $value) {
+                $statement->bindValue(":$column", $value);
+            }
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
 
             $statement->execute();
-            return $this->findProfileByUserId($userId); // Retourne les nouvelles données
-        } catch (Exception $e) {
-            echo $e->getMessage();
-            return false;
+
+            return $statement->rowCount(); // Retourner strictement un int
+        } catch (\Exception $e) {
+            error_log("Erreur dans updateProfile : " . $e->getMessage());
+            return 0; // Toujours retour 0 en cas de problème
         }
+    }
+
+    /**
+     * Crée un profil par défaut pour un utilisateur.
+     * Insère un nouvel enregistrement dans la table `profiles` avec des valeurs par défaut.
+     *
+     * @param int $userId L'ID de l'utilisateur pour lequel créer le profil.
+     * @return bool Retourne true si le profil a été créé avec succès, false sinon.
+     */
+    public function createDefaultProfile(int $userId): bool
+    {
+        // Requête SQL pour insérer un profil par défaut lié à l'utilisateur
+        $sql = "INSERT INTO profiles (user_id, avatar, bio, website_link) VALUES (:userId, '', '', '')";
+        try {
+            $statement = $this->pdo->prepare($sql); // Préparation de la requête
+            $statement->bindParam(":userId", $userId, PDO::PARAM_INT); // Association du paramètre :userId
+            return $statement->execute(); // Exécution de la requête
+        } catch (\Exception $e) {
+            // Enregistrer l'erreur dans les logs pour diagnostic
+            error_log("Erreur lors de la création du profil : " . $e->getMessage());
+            return false; // Retourner false en cas d'échec
+        }
+    }
+
+    /**
+     * Vérifie si un profil existe pour un utilisateur donné.
+     * Recherche dans la table `profiles` si un enregistrement contenant l'ID utilisateur existe.
+     *
+     * @param int $userId L'ID de l'utilisateur pour lequel vérifier le profil.
+     * @return bool Retourne true si un profil existe, false sinon.
+     */
+    public function profileExists(int $userId): bool
+    {
+        // Requête SQL pour compter le nombre de profils associés à un utilisateur
+        $sql = "SELECT COUNT(*) FROM profiles WHERE user_id = :userId";
+        $statement = $this->pdo->prepare($sql); // Préparation de la requête
+        $statement->bindParam(":userId", $userId, PDO::PARAM_INT); // Association du paramètre :userId
+        $statement->execute(); // Exécution de la requête
+        return $statement->fetchColumn() > 0; // Retourne true si un ou plusieurs profils existent
     }
 
     /**

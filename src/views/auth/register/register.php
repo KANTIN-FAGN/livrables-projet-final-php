@@ -63,6 +63,9 @@ unset($_SESSION["success"]);
                     Mot de passe
                 </label>
             </div>
+            <a href="/login" class="link">
+                Déjà un compte ? Connectez-vous
+            </a>
             <input type="submit" value="S'inscrire" class="btn-submit">
         </form>
     </div>

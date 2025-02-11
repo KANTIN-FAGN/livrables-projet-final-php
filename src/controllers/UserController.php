@@ -31,6 +31,11 @@ class UserController
         // Utilise le modèle pour insérer un nouvel utilisateur dans la base de données
         $userId = $this->userModel->createUser($firstname, $lastname, $email, $password);
 
+        if ($userId) {
+            // Crée un profil par défaut pour cet utilisateur
+            $this->userModel->createDefaultProfile((int)$userId);
+        }
+
         // Retourne l'ID de l'utilisateur créé
         return $userId;
     }
@@ -69,75 +74,74 @@ class UserController
      * Met à jour les informations générales de l'utilisateur dans la base de données
      *
      * @param int $id Identifiant de l'utilisateur
-     * @param array $data Données à mettre à jour (assoc array)
+     * @param array $data Données à mettre à jour (assoc tableau)
      * @return int Nombre de lignes affectées
      * @throws \Exception Si l'ID ou les données sont manquants ou invalides
      */
     public function updateUser($id, $data): int
     {
-        // Validation : Vérifie si l'ID et les données à mettre à jour sont non vides
         if (empty($id) || empty($data)) {
             throw new \Exception("Les données ou l'identifiant utilisateur sont invalides.");
         }
 
-        // Journalisation des données pour suivre les mises à jour
-        error_log("Mise à jour utilisateur pour ID=$id avec données : " . json_encode($data));
-
-        // Appel au modèle pour effectuer la mise à jour et récupérer les lignes affectées
-        $affectedRows = $this->userModel->updateUser((int)$id, $data);
-
-        // S'assurer que le retour est un entier, renvoyer 0 sinon
-        return is_int($affectedRows) ? $affectedRows : 0;
+        $result = $this->userModel->updateUser((int)$id, $data);
+        return is_numeric($result) ? intval($result) : 0; // Garantir un retour int
     }
 
     /**
-     * Met à jour la biographie, le site web et d'autres données du profil utilisateur
+     * Met à jour les informations du profil utilisateur
      *
      * @param int $id Identifiant de l'utilisateur
-     * @param array $data Données à mettre à jour (biographie, site web, autres champs)
-     * @return int Nombre total de lignes affectées
+     * @param array $data Données à mettre à jour
+     * @return array|bool Retourne les données mises à jour en cas de succès, ou false en cas d'échec
      */
-    public function updateProfile($id, $data): int
+    public function updateProfile($id, $data)
     {
-        // Variable pour suivre le nombre de lignes affectées
-        $rowsUpdated = 0;
-
-        // Gestion spécifique de la biographie et du site web
-        if (isset($data['bio'])) {
-            // Extraire et supprimer la biographie des données
-            $bio = $data['bio'];
-            unset($data['bio']);
-
-            // Extraire et supprimer l'URL du site web
-            $website_link = $data['website'];
-            unset($data['website']);
-
-            // Met à jour la biographie dans la base de données
-            $bioUpdated = $this->userModel->updateProfile($id, ['bio' => $bio]);
-            if (is_int($bioUpdated)) {
-                $rowsUpdated += $bioUpdated;
-            }
-
-            // Met à jour l'URL du site web dans la base de données
-            $websiteUpdated = $this->userModel->updateProfile($id, ['website_link' => $website_link]);
-            if (is_int($websiteUpdated)) {
-                $rowsUpdated += $websiteUpdated;
-            }
-
-            // Journalisation de la mise à jour
-            error_log("Mise à jour de la biographie et du site web pour utilisateur ID=$id");
+        // Vérifier si le profil existe
+        if (!$this->userModel->profileExists($id)) {
+            // Si le profil n'existe pas, créer un profil par défaut
+            $this->userModel->createDefaultProfile($id);
         }
 
-        // Gestion d'autres champs restants dans les données, le cas échéant
-        if (!empty($data)) {
-            $otherUpdated = $this->userModel->updateUser($id, $data);
-            if (is_int($otherUpdated)) {
-                $rowsUpdated += $otherUpdated;
-            }
+        // Maintenant, vous pouvez mettre à jour le profil comme d'habitude
+        $updatedData = $this->userModel->updateProfile($id, $data);
+
+        if ($updatedData === false) {
+            return "Aucune mise à jour effectuée pour le profil de l'utilisateur $id.";
         }
 
-        // Retourne le nombre total de lignes mises à jour
-        return $rowsUpdated;
+        return "Les données de l'utilisateur ont été mises à jour avec succès : " . json_encode($updatedData);
+    }
+
+    /**
+     * Vérifie si le profil d'un utilisateur existe dans la base de données.
+     *
+     * Cette méthode utilise la méthode correspondante dans le modèle `UserModel`
+     * pour déterminer si un profil est associé à un utilisateur selon son ID.
+     *
+     * @param int $userId L'ID de l'utilisateur à vérifier.
+     * @return bool Retourne true si le profil existe, false sinon.
+     */
+    public function profileExists(int $userId): bool
+    {
+        // Appel de la méthode profileExists du modèle UserModel
+        return $this->userModel->profileExists($userId);
+    }
+
+    /**
+     * Crée un profil par défaut pour un utilisateur.
+     *
+     * Cette méthode délègue la création d'un profil à la méthode correspondante
+     * dans le modèle `UserModel`. Le profil est créé avec des valeurs par défaut
+     * (par exemple, un avatar, une bio ou un lien vide).
+     *
+     * @param int $userId L'ID de l'utilisateur pour lequel un profil doit être créé.
+     * @return bool Retourne true si le profil a été créé avec succès, false sinon.
+     */
+    public function createDefaultProfile(int $userId): bool
+    {
+        // Appel de la méthode createDefaultProfile du modèle UserModel
+        return $this->userModel->createDefaultProfile($userId);
     }
 
     /**
@@ -148,10 +152,14 @@ class UserController
      * @param array $levels Liste des niveaux correspondants
      * @return int Nombre total de lignes affectées
      */
-    public function updateUserSkills($id, $skills, $levels)
+    public function updateUserSkills($id, $skills, $levels): int
     {
-        // Appel au modèle pour mettre à jour les compétences, avec suppression/reinsertion
-        return $this->userModel->updateUserSkills((int)$id, $skills, $levels);
+        if (empty($skills) || empty($levels)) {
+            return 0; // Aucun changement
+        }
+
+        $result = $this->userModel->updateUserSkills($id, $skills, $levels);
+        return is_numeric($result) ? intval($result) : 0;
     }
 
     /**
