@@ -18,24 +18,100 @@
   box-shadow: 0px 0px 0px 1px rgba(140, 140, 140, 0.2);
   border-radius: 0.4rem;
   background-color: white;
-  padding: 20px;
   min-width: 700px;
 }
-.formEdit .formEdit-container .formEdit-container-input {
+.formEdit .formEdit-container .formEdit-btn {
+  position: relative;
+  width: 100%;
+}
+.formEdit .formEdit-container .formEdit-btn button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.formEdit .formEdit-container form {
+  padding: 2rem 1rem;
+}
+.formEdit .formEdit-container form .formEdit-container-input {
   margin-top: 10px;
   width: 100%;
   display: flex;
   flex-direction: column;
 }
-.formEdit .formEdit-container .formEdit-container-input input {
+.formEdit .formEdit-container form .formEdit-container-input input {
   width: 100%;
   border: 1px solid rgba(140, 140, 140, 0.2);
   border-radius: 0.4rem;
   padding: 6px 8px;
 }
-.formEdit .formEdit-container .formEdit-container-input label {
+.formEdit .formEdit-container form .formEdit-container-input label {
   margin-bottom: 5px;
   padding-left: 5px;
+}
+.formEdit .formEdit-container form .formEdit-hr {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.formEdit .formEdit-container form .formEdit-hr hr {
+  margin: 1rem 0;
+  border: none;
+  border-bottom: 1px solid rgba(140, 140, 140, 0.2);
+  width: 70%;
+}
+.formEdit .formEdit-container form #skills-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.formEdit .formEdit-container form #skills-wrapper .skill-entry {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.formEdit .formEdit-container form #skills-wrapper .skill-entry .delete-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  color: black;
+}
+.formEdit .formEdit-container form #skills-wrapper .skill-entry .delete-btn:hover {
+  color: red;
+}
+.formEdit .formEdit-container form #add-skill-btn {
+  margin-top: 10px;
+  width: 100%;
+  height: 2rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  background-color: grey;
+}
+.formEdit .formEdit-container form #add-skill-btn:hover {
+  background-color: green;
+  transition: all 0.3s ease;
+}
+.formEdit .formEdit-container form .input-btn-maj {
+  margin-top: 10px;
+  width: 100%;
+  height: 2rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  background-color: grey;
+}
+.formEdit .formEdit-container form .input-btn-maj:hover {
+  background-color: dodgerblue;
+  transition: all 0.3s ease;
 }
 
 /*# sourceMappingURL=formEdit.css.map */

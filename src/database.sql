@@ -61,10 +61,10 @@ CREATE TABLE IF NOT EXISTS profiles (
 -- Insérer des comptes utilisateurs de test
 INSERT INTO users (email, firstname, lastname, password, role)
 VALUES
-    ('admin@portfolio.com', 'kantin', 'fagniart', '$2y$10$HppUqcK1R8kD.tjUlM6SUO8.0Qrn45Ejbr/x0OIaeB7eEiH4AQgEa', 'admin'), -- Mot de passe : password
-    ('user1@portfolio.com', 'julien', 'dante','$2y$10$HppUqcK1R8kD.tjUlM6SUO8.0Qrn45Ejbr/x0OIaeB7eEiH4AQgEa', 'utilisateur'), -- Mot de passe : password
-    ('user2@portfolio.com', 'nathanael', 'pivot','$2y$10$HppUqcK1R8kD.tjUlM6SUO8.0Qrn45Ejbr/x0OIaeB7eEiH4AQgEa', 'utilisateur'), -- Mot de passe : password
-    ('user3@portfolio.com', 'vito', 'deriu','$2y$10$HppUqcK1R8kD.tjUlM6SUO8.0Qrn45Ejbr/x0OIaeB7eEiH4AQgEa', 'utilisateur'); -- Mot de passe : password
+    ('admin@portfolio.com', 'kantin', 'fagniart', '$2y$12$g320TCnG3/gI4cdB1b2Rze94tFg3y3qxvMNvWZPKsTRMTtc40tcK6', 'admin'), -- Mot de passe : password
+    ('user1@portfolio.com', 'julien', 'dante','$2y$12$3ZktREnSgEe0Z8rD2wKQ5OTzVhVuRn9CKU3Bbuc2eMPZjQnIpvJaa', 'utilisateur'), -- Mot de passe : password
+    ('user2@portfolio.com', 'nathanael', 'pivot','$2y$12$p1NAforHNxqn8mj33s1lguPKf.tltQsA3zupdEbyMA4/NEuwTLbsG', 'utilisateur'), -- Mot de passe : password
+    ('user3@portfolio.com', 'vito', 'deriu','$2y$12$SCJu4pNH2If2ToKsZThMte0X2JP3lvK2N8/Q6HOP8gIuMV6rluLne', 'utilisateur'); -- Mot de passe : password
 
 -- Insérer des compétences prédéfinies
 INSERT INTO skills (name)

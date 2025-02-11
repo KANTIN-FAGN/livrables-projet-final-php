@@ -1,33 +1,5 @@
 <?php
-
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
-
-use App\Core\Services\JwtService;
-
-// Définir BASE_PATH si elle n'existe pas
-if (!defined('BASE_PATH')) {
-    define('BASE_PATH', dirname(__DIR__, 4) . '/'); // On remonte jusqu'à la racine du projet
-}
-
-// Charger les variables d'environnement si elles ne sont pas déjà définies
-if (!isset($_ENV['BASE_URL'])) {
-    $dotenv = Dotenv\Dotenv::createImmutable(BASE_PATH);
-    $dotenv->load();
-}
-
-// Récupération du jeton JWT
-$jwt = $_COOKIE['access_token'] ?? null;
-
-// Vérification du jeton JWT et récupération des données utilisateur
-$userData = null;
-if ($jwt) {
-    $userData = JwtService::verifyToken($jwt);
-}
-
-// Validation de la connexion : un utilisateur est considéré connecté si le jeton est valide
-$isConnected = $userData !== null;
+include_once BASE_PATH . 'src/includes/bootstrap.php';
 
 // Gestion du chemin de l'avatar
 $defaultAvatarPathPublic = $_ENV['BASE_URL'] . '/img/avatars/default.png';
@@ -56,7 +28,7 @@ if (!file_exists($avatarPathFile)) {
             <div class="user-data">
                 <p><?= htmlspecialchars($userData['firstname'] ?? 'Unknown') ?> <?= htmlspecialchars(strtoupper($userData['lastname'] ?? 'Unknown')) ?></p>
                 <p><?= htmlspecialchars($userData['email'] ?? 'Unknown') ?></p>
-                <p>Rôle : <?= htmlspecialchars($userData['bio'] ?? 'Unknown') ?></p>
+                <p><?= htmlspecialchars($userData['bio'] ?? 'Unknown') ?></p>
                 <a href="/profile">Accéder à votre profil</a>
             </div>
         </div>

@@ -10,89 +10,94 @@ use App\Controllers\UserController;
 use App\controllers\AuthController;
 
 try {
-    // Démarrer une session si elle n'est pas active
+    // Vérifiez et démarrez une session si elle n'est pas déjà active
     if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
+        session_start(); // Démarrage de la session utilisateur indispensable pour stocker les messages ou données de session
     }
 
-    // Récupérer les données transmises via POST
-    $id = $_POST['id'] ?? null;
-    $firstname = $_POST['firstname'] ?? null;
-    $lastname = $_POST['lastname'] ?? null;
-    $bio = $_POST['bio'] ?? null;
-    $website = $_POST['website'] ?? null;
+    // Collecte des données envoyées via le formulaire en méthode POST
+    // Utilisation de l'opérateur null coalescent (??) pour fournir des valeurs par défaut si les champs sont absents
+    $id = $_POST['id'] ?? null; // Identifiant utilisateur
+    $firstname = $_POST['firstname'] ?? null; // Prénom de l'utilisateur
+    $lastname = $_POST['lastname'] ?? null; // Nom de l'utilisateur
+    $bio = $_POST['bio'] ?? null; // Biographie de l'utilisateur
+    $website = $_POST['website'] ?? null; // URL du site web personnel de l'utilisateur
+    $skills = $_POST['skills'] ?? []; // Liste des compétences sélectionnées
+    $levels = $_POST['levels'] ?? []; // Liste des niveaux correspondant aux compétences
 
-    // Vérifiez si l'ID est valide
+    // Validation : vérifier si l'ID est valide (non vide et numérique)
     if (empty($id) || !is_numeric($id)) {
-        throw new Exception("L'ID utilisateur est invalide ou manquant.");
+        throw new Exception("L'ID utilisateur est invalide ou manquant."); // Lancer une exception si la validation échoue
     }
 
-    // Initialisation du contrôleur d'utilisateur
-    $userController = new UserController();
+    // Préparation des données pour la mise à jour
+    $userUpdateData = []; // Données pour la table 'users'
+    $profileUpdateData = []; // Données pour la table 'profiles'
 
-    // Initialiser les tableaux pour les mises à jour
-    $userUpdateData = [];
-    $profileUpdateData = [];
-
-    // Préparer les données pour mettre à jour 'users'
+    // Construction des données à mettre à jour dans la table 'users'
     if (!empty($firstname)) {
-        $userUpdateData['firstname'] = $firstname;
+        $userUpdateData['firstname'] = $firstname; // Ajout du prénom
     }
     if (!empty($lastname)) {
-        $userUpdateData['lastname'] = $lastname;
+        $userUpdateData['lastname'] = $lastname; // Ajout du nom
     }
 
-    // Préparer les données pour mettre à jour 'profiles'
+    // Construction des données à mettre à jour dans la table 'profiles'
     if (!empty($bio)) {
-        $profileUpdateData['bio'] = $bio;
+        $profileUpdateData['bio'] = $bio; // Ajout de la biographie
     }
-
     if (!empty($website)) {
-        $profileUpdateData['website'] = $website;
+        $profileUpdateData['website'] = $website; // Ajout de l'URL du site web
     }
 
-    // Compter les lignes mises à jour
+    // Initialiser le contrôleur utilisateur pour interagir avec la base de données via le modèle
+    $userController = new UserController(); // Instance du contrôleur utilisateur
+
+    // Variable pour suivre le nombre total de lignes affectées par les mises à jour
     $updatedRows = 0;
 
-    // Exécuter la mise à jour des utilisateurs si nécessaire
+    // Mise à jour des données dans la table 'users' si nécessaire
     if (!empty($userUpdateData)) {
-        error_log("Mise à jour des utilisateurs avec données : " . json_encode($userUpdateData));
-        // Récupère les lignes affectées
-        $updatedRows += $userController->updateUser($id, $userUpdateData);
+        $updatedRows += $userController->updateUser($id, $userUpdateData); // Appel à la méthode de mise à jour
     }
 
-    // Exécuter la mise à jour des profils si nécessaire
+    // Mise à jour des données dans la table 'profiles' si nécessaire
     if (!empty($profileUpdateData)) {
-        error_log("Mise à jour des profils avec données : " . json_encode($profileUpdateData));
-
-        // Récupère les lignes affectées
-        $updatedRows += $userController->updateProfile($id, $profileUpdateData);
+        $updatedRows += $userController->updateProfile($id, $profileUpdateData); // Appel à la méthode de mise à jour
     }
 
-    // Recharger les données utilisateur mises à jour depuis la base
+    // Mise à jour des compétences de l'utilisateur s'il y a des compétences et niveaux fournis
+    if (!empty($skills) && !empty($levels) && count($skills) === count($levels)) {
+        $updatedRows += $userController->updateUserSkills($id, $skills, $levels); // Mise à jour des compétences si les données sont cohérentes
+    }
+
+    // Recharge des données utilisateur mises à jour depuis la base de données pour refléter les changements récents
     $updatedUserData = $userController->getUser($id);
 
+    // Validation : si les données utilisateur mises à jour ne sont pas récupérées, une exception est levée
     if (!$updatedUserData) {
         throw new Exception("Impossible de récupérer les données utilisateur mises à jour.");
     }
 
-    // Mettre à jour la session ou le JWT
-    $_SESSION['user'] = $updatedUserData; // Met à jour la session utilisateur
+    // Mise à jour de la session utilisateur avec les nouvelles données
+    $_SESSION['user'] = $updatedUserData; // Stocke les données de l'utilisateur dans la session pour un accès futur
 
-    // Facultatif : Regénérer le JWT si vous utilisez des tokens
-    $authController = new AuthController();
-    $authController->regenerateToken($updatedUserData);
+    // Optionnel : Regénération du token JWT (si vous utilisez une gestion avec JWT pour l'authentification)
+    $authController = new AuthController(); // Instance pour gérer les tokens et l'authentification
+    $authController->regenerateToken($updatedUserData); // Regénère un token basé sur les nouvelles données utilisateur
 
-    // Message de retour selon le nombre de lignes affectées
+    // Préparation d'un message de retour sur le statut de la mise à jour
     if ($updatedRows === 0) {
+        // Si aucune ligne n'a été mise à jour, l'utilisateur est informé que son profil est à jour
         $_SESSION['success'] = "Votre profil est déjà à jour.";
     } else {
+        // Si des lignes ont été mises à jour, informer que la mise à jour a réussi
         $_SESSION['success'] = "Profil mis à jour avec succès.";
     }
 
-    // Redirection après la mise à jour
-    header('Location: /profile', true, 303); // 303 Redirect pour POST > GET
-    exit();
+    // Redirection après mise à jour
+    header('Location: /profile', true, 303); // Redirection vers la page du profil (statut HTTP 303 pour éviter la re-soumission du formulaire)
+    exit(); // Terminer le script pour garantir qu'aucune autre sortie n'est envoyée
 } catch (Exception $e) {
     // En cas d'erreur, journaliser et rediriger
     echo $e->getMessage();

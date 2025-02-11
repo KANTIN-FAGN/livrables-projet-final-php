@@ -2,8 +2,8 @@
 
 ## Présentation du Projet
 Ce projet est une application web développée en PHP & MySQL permettant aux utilisateurs de :
-- [ ] Gérer leur profil (inscription, connexion, mise à jour des informations).
-- [ ] Ajouter et modifier leurs compétences parmi celles définies par un administrateur.
+- [X] Gérer leur profil (inscription, connexion, mise à jour des informations).
+- [X] Ajouter et modifier leurs compétences parmi celles définies par un administrateur.
 - [ ] Ajouter et gérer leurs projets (titre, description, image et lien).
 - [ ] Un administrateur peut gérer les compétences disponibles.
 
@@ -12,15 +12,15 @@ Ce projet est une application web développée en PHP & MySQL permettant aux uti
 ### Authentification & Gestion des Comptes
 - [X] Inscription avec validation des champs
 - [ ] Connexion sécurisée avec sessions et option "Se souvenir de moi"
-- [ ] Gestion des rôles (Admin / Utilisateur)
-- [ ] Mise à jour des informations utilisateur
+- [X] Gestion des rôles (Admin / Utilisateur)
+- [X] Mise à jour des informations utilisateur
 - [ ] Réinitialisation du mot de passe
 - [X] Déconnexion sécurisée
 
 ### Gestion des Compétences
 - [ ] L’administrateur peut gérer les compétences proposées
-- [ ] Un utilisateur peut sélectionner ses compétences parmi celles disponibles
-- [ ] Niveau de compétence défini sur une échelle (débutant → expert)
+- [X] Un utilisateur peut sélectionner ses compétences parmi celles disponibles
+- [X] Niveau de compétence défini sur une échelle (débutant → expert)
 
 ### Gestion des Projets
 - [ ] Ajout, modification et suppression de projets
@@ -32,7 +32,7 @@ Ce projet est une application web développée en PHP & MySQL permettant aux uti
 - [ ] Protection contre XSS, CSRF et injections SQL
 - [X] Hachage sécurisé des mots de passe
 - [X] Gestion des erreurs utilisateur avec affichage des messages et conservation des champs remplis
-- [ ] Expiration automatique de la session après inactivité
+- [X] Expiration automatique de la session après inactivité
 
 ## Installation et Configuration
 
@@ -72,9 +72,21 @@ Ce projet est une application web développée en PHP & MySQL permettant aux uti
 - **Email** : admin@example.com
 - **Mot de passe** : password
 
-### Compte Utilisateur
-- **Email** : user@example.com
-- **Mot de passe** : password
+### Comptes Utilisateurs
+
+- **Utilisateur 1** :  
+  Email       : user1@example.com  
+  Mot de passe : password
+
+
+- **Utilisateur 2** :  
+  Email       : user2@example.com  
+  Mot de passe : password
+
+
+- **Utilisateur 3** :  
+  Email       : user3@example.com  
+  Mot de passe : password
 
 ## Structure du Projet
 
@@ -92,7 +104,7 @@ UN exemple de structure possible (la première ligne doit respecter cette struct
 ## Technologies Utilisées
 - **Backend** : **PHP / MYSQL**
 - **Frontend** : **PHP / SCSS**
-- **Sécurité** : **à renseigner**
+- **Sécurité** : **SHA256 / **
 - **Gestion du Projet** : **GITHUB**
 
 ## Licence
