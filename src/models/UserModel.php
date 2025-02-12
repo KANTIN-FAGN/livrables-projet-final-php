@@ -228,6 +228,24 @@ class UserModel
     }
 
     /**
+     * Récupère le nom de fichier de l'avatar associé à un utilisateur via son ID.
+     *
+     * @param int $id L'ID de l'utilisateur dont on souhaite récupérer l'avatar.
+     * @return string|null Le nom du fichier de l'avatar si trouvé, sinon null.
+     */
+    public function getAvatarByUserId($id)
+    {
+        // Définir la requête SQL pour sélectionner l'avatar depuis la table 'profiles'
+        $query = "SELECT avatar FROM profiles WHERE user_id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Retourner la colonne 'avatar' si une correspondance est trouvée, sinon retourne null
+        return $stmt->fetchColumn();
+    }
+
+    /**
      * Met à jour le profil utilisateur (ex. bio, site web) dans la table 'profiles'
      *
      * @param int $id Identifiant de l'utilisateur
@@ -264,6 +282,13 @@ class UserModel
     }
 
 
+    /**
+     * Met à jour l'image de profil utilisateur dans la table 'profiles'
+     *
+     * @param int $id Identifiant de l'utilisateur
+     * @param string $avatarPath Données à mettre à jour (clé => valeur)
+     * @return bool Retourne true si la mise à jour réussit, false en cas d'erreur
+     */
     public function updateAvatar(int $id, string $avatarPath): bool
     {
         $sql = "UPDATE profiles SET avatar = :avatar WHERE user_id = :id";

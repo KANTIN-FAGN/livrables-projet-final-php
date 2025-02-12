@@ -128,6 +128,12 @@ class UserController
         return $this->userModel->profileExists($userId);
     }
 
+
+    public function getAvatarByUserId($id)
+    {
+        return $this->userModel->getAvatarByUserId($id);
+    }
+
     /**
      * Crée un profil par défaut pour un utilisateur.
      *
@@ -162,11 +168,23 @@ class UserController
         return is_numeric($result) ? intval($result) : 0;
     }
 
+    /**
+     * Met à jour l'image de profil d'un utilisateur dans la base de données.
+     *
+     * Cette méthode utilise le modèle utilisateur pour enregistrer
+     * un nouveau chemin d'accès à l'avatar de l'utilisateur.
+     *
+     * @param int $id Identifiant unique de l'utilisateur dont le profil doit être mis à jour.
+     * @param string $avatarPath Chemin d'accès ou URL de la nouvelle image de profil.
+     *                          (Doit être une chaîne valide représentant un chemin ou une URL.)
+     * @return bool Retourne true si la mise à jour est réussie, sinon false.
+     */
     public function updateAvatar(int $id, string $avatarPath): bool
     {
         $result = $this->userModel->updateAvatar($id, $avatarPath);
         return $result;
     }
+
 
     /**
      * Récupère les informations complètes d'un utilisateur par son ID

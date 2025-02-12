@@ -65,6 +65,12 @@ try {
             mkdir($uploadDir, 0755, true); // Créer le dossier s'il n'existe pas
         }
 
+        // Vérifier et supprimer l'ancienne image s'il y en a une
+        $existingAvatar = $userController->getAvatarByUserId($id); // Méthode à créer pour récupérer l'ancien avatar
+        if ($existingAvatar && file_exists($uploadDir . $existingAvatar)) {
+            unlink($uploadDir . $existingAvatar); // Supprimer l'ancien fichier
+        }
+
         // Déplacer le fichier vers le dossier final
         $finalPath = $uploadDir . $newFileName;
         if (!move_uploaded_file($temporaryPath, $finalPath)) {
@@ -74,7 +80,6 @@ try {
         // Mettre à jour l'avatar en base de données
         $userController->updateAvatar($id, $newFileName);
     }
-
 
     // Préparation des données pour les tables 'users' et 'profiles'
     $userUpdateData = array_filter([

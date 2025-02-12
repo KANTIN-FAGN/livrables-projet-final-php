@@ -35,8 +35,6 @@ class SkillModel
             $statement->execute(); // Exécution de la requête
             $data = $statement->fetchAll(PDO::FETCH_ASSOC); // Récupère les résultats en tableau associatif
 
-            // Journalisation : Enregistre les données récupérées dans le journal en mode débogage
-            error_log("Données dans getAllSkills : " . print_r($data, true));
             return $data; // Retourne les compétences sous forme de tableau associatif
         } catch (Exception $e) {
             // Gestion des erreurs : enregistre le message d'erreur dans le journal
