@@ -102,6 +102,25 @@
     min-width: 50rem;
     background-color: white;
     padding: 20px;
+    .profile-posts-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .profile-posts-button {
+        background-color: transparent;
+        border: 1px solid #0a66c2;
+        border-radius: 1rem;
+        padding: 5px;
+        color: #0a66c2;
+        outline: none;
+        cursor: pointer;
+        text-decoration: none;
+        &:hover {
+          border: 1px solid #009aff;
+          color: #009aff;
+        }
+      }
+    }
     .profile-posts-content {
       margin-top: 10px;
       display: flex;

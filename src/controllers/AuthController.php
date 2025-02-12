@@ -68,6 +68,7 @@ class AuthController
                 'lastname' => ucfirst(strtolower($user['lastname'])),   // Formater le nom
                 'bio' => $bio,
                 'role' => $user['role'],
+                'posts' => $posts,
                 'website_link' => $website_link,
                 'avatar' => $avatar,
                 'skills' => $skills,

@@ -143,7 +143,7 @@ class UserModel
     public function findPostsUserByID(int $userId): array
     {
         // Requête SQL pour sélectionner toutes les colonnes dans la table "posts" où "user_id" correspond à l'utilisateur donné
-        $query = "SELECT * FROM posts WHERE user_id = :user_id"; // Suppose que la table s'appelle "posts"
+        $query = "SELECT * FROM projects WHERE user_id = :user_id"; // Suppose que la table s'appelle "posts"
 
         try {
             // Préparation de la requête SQL avec le PDO (permet de sécuriser la requête en évitant les injections SQL)

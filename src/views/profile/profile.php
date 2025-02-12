@@ -33,6 +33,7 @@ if (!file_exists($avatarPathFile)) {
         <?= file_get_contents(BASE_PATH . 'src/views/profile/profile.scss') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/profile/components/postsCard/postsCard.scss') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/profile/components/formEdit/formEdit.scss') ?>
+        <?= file_get_contents(BASE_PATH . 'src/views/profile/components/formCreatePost/formCreatePost.scss') ?>
     </style>
     <script>
         <?= file_get_contents(BASE_PATH . 'src/views/profile/profile.js') ?>
@@ -96,13 +97,21 @@ if (!file_exists($avatarPathFile)) {
             </div>
         <?php endif; ?>
         <div class="profile-posts">
-            <h2>Posts</h2>
+            <div class="profile-posts-header">
+                <h2>Posts</h2>
+                <div >
+                    <button class="profile-posts-button" onclick="toggleFormPost()">
+                        Ajouter un post
+                    </button>
+                </div>
+            </div>
             <div class="profile-posts-content">
                 <?php include BASE_PATH . 'src/views/profile/components/postsCard/postsCard.php'; ?>
             </div>
         </div>
     </section>
     <?php include BASE_PATH . 'src/views/profile/components/formEdit/formEdit.php'; ?>
+    <?php include BASE_PATH . 'src/views/profile/components/formCreatePost/formCreatePost.php'; ?>
 </main>
 </body>
 </html>

@@ -7,6 +7,15 @@ function toggleForm() {
     formEdit.classList.toggle("open");
 }
 
+// Ouvre ou ferme le formulaire de création de posts
+function toggleFormPost() {
+    // Récupère l'élément du formulaire avec l'ID 'formPost'
+    const formPost = document.getElementById("formPost");
+
+    // Change la classe 'open' : l'ajoute si elle est absente, la retire si elle est présente
+    formPost.classList.toggle("open");
+}
+
 // Ajoute un nouvel élément de compétence dans la section des compétences
 function addSkill() {
     const container = document.getElementById('skills-wrapper');
