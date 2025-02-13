@@ -10,21 +10,27 @@ class PageController
     private $postController;
 
     /**
-     * Initialisation du contrôleur utilisateur avec une instance du modèle utilisateur
+     * Constructeur du contrôleur PageController.
+     * Initialisation d'une instance du PostController pour gérer les posts.
      */
     public function __construct()
     {
-        // Instancie le modèle utilisateur pour l'interaction avec la base de données
+        // Instancie le PostController pour l'interaction avec la base de données des posts
         $this->postController = new PostController();
     }
 
+    /**
+     * Méthode pour afficher la page d'accueil.
+     * Inclut directement la vue associée.
+     */
     public static function home()
     {
         include_once '../views/home/home.php';
     }
 
     /**
-     * @return void
+     * Méthode pour afficher la page d'inscription.
+     * Inclut la vue d'inscription correspondante.
      */
     public static function register()
     {
@@ -32,7 +38,8 @@ class PageController
     }
 
     /**
-     * @return void
+     * Méthode pour gérer les services liés à l'inscription.
+     * Inclut le fichier de service d'inscription.
      */
     public static function registerService()
     {
@@ -40,7 +47,8 @@ class PageController
     }
 
     /**
-     * @return void
+     * Méthode pour afficher la page de connexion.
+     * Inclut directement la vue de connexion.
      */
     public static function login()
     {
@@ -48,66 +56,98 @@ class PageController
     }
 
     /**
-     * @return void
+     * Méthode pour gérer les services liés à la connexion.
+     * Inclut le fichier de service de connexion.
      */
     public static function loginService()
     {
         include_once '../views/auth/login/services/loginService.php';
     }
 
+    /**
+     * Méthode pour afficher le profil de l'utilisateur connecté.
+     * Inclut la vue de profil.
+     */
     public static function profile()
     {
         include_once '../views/profile/profile.php';
     }
 
+    /**
+     * Méthode pour afficher la page d'édition du profil.
+     * Inclut le fichier de service associé aux modifications du profil.
+     */
     public static function editProfile()
     {
         include_once '../views/profile/services/profileService.php';
     }
 
+    /**
+     * Méthode pour créer un nouveau post.
+     * Inclut le fichier de service associé à la création de post.
+     */
     public static function createPost()
     {
         include_once '../views/profile/services/postService.php';
     }
 
+    /**
+     * Méthode pour modifier un post existant.
+     * Récupère le post via son ID et inclut la vue d'édition du post.
+     *
+     * @param int $id ID du post à modifier.
+     */
     public static function editPost(int $id)
     {
-        $postController = new PostController(); // Créer une instance ici
-        $post = $postController->getPostById($id); // Appeler la méthode via l'instance
+        $postController = new PostController(); // Nouveau contrôleur pour gérer les posts
+        $post = $postController->getPostById($id); // Récupérer le post depuis la base de données
 
+        // Journaliser les données récupérées du post pour débogage
         error_log('data : ' . print_r($post, true));
 
-        // Vérifiez si le post existe
+        // Vérifier si le post existe
         if (!$post) {
+            // Arrêter l'exécution si le post n'existe pas
             die("Le post avec l'ID $id n'existe pas.");
         }
 
-        // Passez les données du post dans le formulaire
+        // Passe les données à la vue pour l'édition du post
         include_once '../views/profile/editPost/editPost.php';
     }
 
+    /**
+     * Méthode pour gérer les services liés à la modification d’un post.
+     * Inclut le fichier de service correspondant.
+     */
     public static function editPostService()
     {
         include_once '../views/profile/editPost/services/editPostService.php';
     }
 
+    /**
+     * Méthode pour supprimer un post existant.
+     * Vérifie l'existence du post et inclut le fichier de service de suppression.
+     *
+     * @param int $id ID du post à supprimer.
+     */
     public static function deletePost(int $id)
     {
-
+        // Journalise l'ID reçu pour débogage
         error_log('id : ' . $id);
 
-        $postController = new PostController(); // Créer une instance ici
-        $post = $postController->getPostById($id); // Appeler la méthode via l'instance
+        $postController = new PostController(); // Nouveau contrôleur pour gérer les posts
+        $post = $postController->getPostById($id); // Récupère le post depuis la base de données
 
-        // Résultat loggué pour vérifier
+        // Journaliser le résultat de la récupération pour vérification
         error_log('Résultat de getPostById : ' . print_r($post, true));
 
-        // Vérifiez si le post existe
+        // Vérifier si le post existe
         if (!$post) {
+            // Arrêter l'exécution si le post n'existe pas
             die("Le post avec l'ID $id n'existe pas.");
         }
 
-        // Inclure le fichier correspondant au service de suppression
+        // Inclure le fichier de service où la suppression sera exécutée
         include_once '../views/profile/services/postDeleteService.php';
     }
 }
