@@ -1,3 +1,5 @@
+/!\ PROJET PAS FINI (manque de temps) /!\
+
 # Projet Portfolio - Gestion des Utilisateurs et des Compétences
 
 ## Présentation du Projet
