@@ -77,17 +77,60 @@ class PostModel
         }
     }
 
-    public function findPostByID(int $id)
+    public function getPostById(int $id): ?array {
+        $sql = "SELECT * FROM projects WHERE id = :id LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+
+        error_log("Requête SQL : $sql avec ID = $id"); // Journaliser la requête exécutée
+
+        $stmt->bindValue(':id', $id, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        $post = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        return $post ?: null;
+    }
+
+    public function updatePost(int $id, array $data): bool {
+        $sql = "UPDATE $this->table SET title = :title, description = :description, image_path = :image_path, external_link = :external_link WHERE id = :id";
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->bindValue(':title', $data['title'], PDO::PARAM_STR);
+            $statement->bindValue(':description', $data['description'], PDO::PARAM_STR);
+            $statement->bindValue(':image_path', $data['image_path'], PDO::PARAM_STR);
+            $statement->bindValue(':external_link', $data['external_link'], PDO::PARAM_STR);
+            $result = $statement->execute();
+            return $result; // Retourne true si réussie, false sinon
+        } catch (Exception $e) {
+            error_log("Erreur dans updatePost : " . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function findImagePostByID(int $id)
     {
-        $sql = "SELECT * FROM $this->table WHERE id = :id";
+        $sql = "SELECT image_path FROM $this->table WHERE id = :id";
         try {
             $statement = $this->pdo->prepare($sql);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->execute();
             return $statement->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            error_log("Erreur dans findPostByID : " . $e->getMessage());
-            return false;
+            error_log("Erreur dans findImagePostByID : " . $e->getMessage());
         }
+    }
+
+    public function deletePost(int $id)
+    {
+        $sql = "DELETE FROM $this->table WHERE id = :id";
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $result = $statement->execute();
+        } catch (Exception $e) {
+            error_log("Erreur dans deletePost : " . $e->getMessage());
+        }
+        return $result;
     }
 }

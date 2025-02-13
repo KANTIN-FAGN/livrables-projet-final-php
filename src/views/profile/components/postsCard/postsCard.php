@@ -16,6 +16,11 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
                 $external_link = is_object($post) ? $post->external_link : $post['external_link'];
                 ?>
                 <div class="btn-edit">
+                    <a href="/profile/delete-post/<?= urlencode($id) ?>">
+                        <button class="profile-delete-button">
+                            Supprimer le post
+                        </button>
+                    </a>
                     <a href="/profile/edit-post/<?= urlencode($id) ?>">
                         <button class="profile-edit-button">
                             Modifier le post

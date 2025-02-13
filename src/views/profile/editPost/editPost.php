@@ -16,9 +16,10 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
 <body>
 <section class="formEditPost" id="formEditPost">
     <div class="formEditPost-container">
-        <form action="/profile/edit-post/<?= htmlspecialchars($post['id'], ENT_QUOTES) ?>" method="POST"
+        <form action="/profile/edit-post-service" method="POST"
               enctype="multipart/form-data">
-            <input type="hidden" name="id" value="">
+            <input type="hidden" name="user_id" value="<?= htmlspecialchars($userData['id'], ENT_QUOTES) ?>">
+            <input type="hidden" name="id" value="<?= htmlspecialchars($post['id'], ENT_QUOTES) ?>">
 
             <div>
                 <h3>
@@ -73,5 +74,8 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
         </form>
     </div>
 </section>
+<script>
+    <?= file_get_contents(BASE_PATH . 'src/views/profile/profile.js') ?>
+</script>
 </body>
 </html>

@@ -17,18 +17,6 @@
     border-radius: .4rem;
     background-color: white;
     min-width: 700px;
-    .formEditPost-btn {
-      position: relative;
-      width: 100%;
-      button {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: transparent;
-        border: none;
-        cursor: pointer;
-      }
-    }
     form {
       padding: 2rem 1rem;
       .formEditPost-container-input {
@@ -37,7 +25,7 @@
         display: flex;
         flex-direction: column;
         input {
-          width: 100%;
+          display: flex;
           border: 1px solid rgb(140 140 140/.2);
           border-radius: .4rem;
           padding: 6px 8px;

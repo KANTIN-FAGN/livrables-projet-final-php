@@ -19,11 +19,18 @@ $router->add('GET', '/profile', function () use ($controller) {
 $router->add('POST', '/profile/edit', function () use ($controller) {
     $controller->editProfile();
 }, [OwnerMiddleware::class]);
+
 $router->add('POST', '/create/post', function () use ($controller) {
     $controller->createPost();
 }, [OwnerMiddleware::class]);
 $router->add('GET', '/profile/edit-post/{id}', function ($id) use ($controller) {
     $controller->editPost($id);
+}, [OwnerMiddleware::class]);
+$router->add('POST', '/profile/edit-post-service', function () use ($controller) {
+    $controller->editPostService();
+}, [OwnerMiddleware::class]);
+$router->add('GET' , '/profile/delete-post/{id}', function ($id) use ($controller) {
+    $controller->deletePost($id);
 }, [OwnerMiddleware::class]);
 
 
