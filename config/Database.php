@@ -1,9 +1,12 @@
 <?php
 
-namespace App\config;
+namespace config;
 
-use Dotenv\Dotenv; // Utilisation de la bibliothèque Dotenv pour charger les variables d'environnement
-use PDO; // Importation de classe PDO pour les connexions à la base de données
+use Dotenv\Dotenv;
+use PDO;
+
+// Utilisation de la bibliothèque Dotenv pour charger les variables d'environnement
+// Importation de classe PDO pour les connexions à la base de données
 
 class Database
 {
@@ -19,8 +22,8 @@ class Database
     public static function getPDO(): PDO
     {
         // Vérifie si le fichier .env existe et charge les variables d'environnement
-        if (file_exists(__DIR__ . '../../../.env')) {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../../'); // Crée une instance Dotenv
+        if (file_exists(__DIR__ . '/../../.env')) {
+            $dotenv = Dotenv::createImmutable(__DIR__ . '../'); // Crée une instance Dotenv
             $dotenv->load(); // Charge les variables d'environnement dans `$_ENV`
         }
 

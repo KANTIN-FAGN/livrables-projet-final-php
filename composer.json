@@ -7,6 +7,7 @@
     "psr-4": {
       "Middlewares\\": "src/middlewares/",
       "Core\\": "src/core/",
+      "Config\\": "config/",
       "App\\": "src/"
     }
   },

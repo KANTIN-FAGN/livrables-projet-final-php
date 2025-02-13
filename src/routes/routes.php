@@ -22,6 +22,9 @@ $router->add('POST', '/profile/edit', function () use ($controller) {
 $router->add('POST', '/create/post', function () use ($controller) {
     $controller->createPost();
 }, [OwnerMiddleware::class]);
+$router->add('GET', '/profile/edit-post/{id}', function ($id) use ($controller) {
+    $controller->editPost($id);
+}, [OwnerMiddleware::class]);
 
 
 $router->add('GET', '/register', function () use ($controller) {

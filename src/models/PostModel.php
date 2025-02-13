@@ -2,7 +2,7 @@
 
 namespace App\models;
 
-use App\config\Database;
+use Config\Database;
 use Exception;
 use PDO;
 
@@ -74,6 +74,20 @@ class PostModel
 
             // Retourne un tableau vide pour signaler l'absence de données en cas d'échec
             return [];
+        }
+    }
+
+    public function findPostByID(int $id)
+    {
+        $sql = "SELECT * FROM $this->table WHERE id = :id";
+        try {
+            $statement = $this->pdo->prepare($sql);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->execute();
+            return $statement->fetch(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            error_log("Erreur dans findPostByID : " . $e->getMessage());
+            return false;
         }
     }
 }

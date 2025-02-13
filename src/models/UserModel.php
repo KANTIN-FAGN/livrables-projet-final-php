@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\config\Database;
-use PDO;
+use config\Database;
 use Exception;
+use PDO;
 
 class UserModel
 {

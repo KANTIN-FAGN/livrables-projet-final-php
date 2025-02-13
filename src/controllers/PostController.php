@@ -21,8 +21,10 @@ class PostController
     {
     }
 
-    public function getPost()
+    public function getPostById($id)
     {
+        $result = $this->postModel->findPostByID($id);
+        return $result;
     }
 
     public function createPost(int $user_id, string $title, string $description, string $image_path, string $external_link)

@@ -16,6 +16,39 @@ function toggleFormPost() {
     formPost.classList.toggle("open");
 }
 
+// Ouvre le formulaire de modification d'un post et pré-remplit les champs
+function toggleFormEditPost(postData = null) {
+    const formEditPost = document.getElementById("editPost");
+
+    // Si des données sont fournies, pré-remplit le formulaire
+    if (postData) {
+        const titleInput = document.getElementById("title");
+        const descriptionInput = document.getElementById("description");
+        const externalLinkInput = document.getElementById("external_link");
+        const imagePreview = document.getElementById("imagePreview"); // Aperçu de l'image
+
+        // Mettre à jour les champs avec les valeurs récupérées
+        titleInput.value = postData.title || ""; // Met à jour le champ 'Titre'
+        descriptionInput.value = postData.description || ""; // Met à jour le champ 'Description'
+        externalLinkInput.value = postData.external_link || ""; // Met à jour le champ 'Lien externe'
+
+        // Mise à jour de l'aperçu de l'image si un chemin d'image est présent
+        if (postData.image_path) {
+            imagePreview.src = postData.image_path;
+            imagePreview.style.display = "block"; // Affiche l'aperçu si une image existe
+        } else {
+            imagePreview.src = "";
+            imagePreview.style.display = "none"; // Masque l'aperçu si aucune image n'existe
+        }
+        console.log(postData);
+    } else {
+        console.warn("Aucune donnée de post trouvée.");
+    }
+
+    // Affiche ou masque le formulaire
+    formEditPost.classList.toggle("open");
+}
+
 // Ajoute un nouvel élément de compétence dans la section des compétences
 function addSkill() {
     const container = document.getElementById('skills-wrapper');

@@ -2,9 +2,21 @@
 
 namespace App\Controllers;
 
+use App\controllers\PostController;
 
 class PageController
 {
+
+    private $postController;
+
+    /**
+     * Initialisation du contrôleur utilisateur avec une instance du modèle utilisateur
+     */
+    public function __construct()
+    {
+        // Instancie le modèle utilisateur pour l'interaction avec la base de données
+        $this->postController = new PostController();
+    }
 
     public static function home()
     {
@@ -54,5 +66,19 @@ class PageController
     public static function createPost(){
         include_once '../views/profile/services/postService.php';
     }
+    public static function editPost($id)
+    {
+        $postController = new PostController(); // Créer une instance ici
+        $post = $postController->getPostById($id); // Appeler la méthode via l'instance
 
+        error_log('data : ' . print_r($post, true));
+
+        // Vérifiez si le post existe
+        if (!$post) {
+            die("Le post avec l'ID $id n'existe pas.");
+        }
+
+        // Passez les données du post dans le formulaire
+        include_once '../views/profile/editPost/editPost.php';
+    }
 }

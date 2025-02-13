@@ -16,7 +16,7 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
                 $external_link = is_object($post) ? $post->external_link : $post['external_link'];
                 ?>
                 <div class="btn-edit">
-                    <a href="/profile/edit-post/<?= $id ?>">
+                    <a href="/profile/edit-post/<?= urlencode($id) ?>">
                         <button class="profile-edit-button">
                             Modifier le post
                         </button>
