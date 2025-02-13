@@ -65,7 +65,7 @@ function updateSkillOptions() {
 }
 
 // Écoute l'événement 'DOMContentLoaded' afin de s'assurer que le DOM est complètement chargé avant d'exécuter du JavaScript.
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Récupère l'élément HTML pour l'input de type "file" (champ de téléchargement) par son ID
     const avatarInput = document.getElementById('avatar');
 
@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Ajoute un gestionnaire d'événement 'change' sur l'input "file".
     // Cet événement est déclenché chaque fois qu'un utilisateur sélectionne un fichier depuis son ordinateur.
-    avatarInput.addEventListener('change', function(event) {
+    avatarInput.addEventListener('change', function (event) {
         // Récupère le premier fichier sélectionné par l'utilisateur à partir de l'input "file".
         const file = event.target.files[0];
 
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const reader = new FileReader();
 
             // Ajoute un gestionnaire d'événements 'onload'. Cet événement est déclenché lorsque FileReader termine de lire le fichier.
-            reader.onload = function(e) {
+            reader.onload = function (e) {
                 // Met à jour l'attribut 'src' de l'image d'aperçu avec le contenu lu (sous forme de DataURL).
                 // Cela permet d'afficher le fichier immédiatement en tant qu'image.
                 avatarPreview.src = e.target.result;
@@ -112,6 +112,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+    // Sélectionner les éléments nécessaires
+    const inputFile = document.getElementById('image_path'); // L'élément input file
+    const imagePreview = document.getElementById('imagePreview'); // L'élément <img> pour la prévisualisation
+
+    // Vérification si les éléments existent pour éviter des erreurs
+    if (!inputFile || !imagePreview) {
+        console.error("Les éléments nécessaires (image_path ou imagePreview) sont introuvables.");
+        return; // Arrête le script si les éléments ne sont pas trouvés
+    }
+
+    // Ajouter un gestionnaire d'événement 'change' à l'input
+    inputFile.addEventListener('change', function (event) {
+        const file = event.target.files[0]; // Récupère le fichier sélectionné
+
+        if (file) {
+            // Vérifie si le fichier est une image valide
+            if (!file.type.startsWith('image/')) {
+                alert("Veuillez sélectionner une image valide !"); // Message d'erreur si ce n'est pas une image
+                imagePreview.src = ''; // Réinitialise la prévisualisation
+                imagePreview.alt = ''; // Réinitialise l'attribut alt
+                return;
+            }
+
+            const reader = new FileReader(); // Crée un nouvel objet FileReader
+
+            // Une fois l'image chargée, met à jour l'attribut 'src' de l'élément <img>
+            reader.onload = function (e) {
+                imagePreview.src = e.target.result; // Affecte l'image chargée à l'élément <img>
+                imagePreview.alt = file.name;
+                imagePreview.style.width = '100%';
+                imagePreview.style.height = '350px';
+                imagePreview.style.objectFit = 'contain';
+            };
+
+            reader.readAsDataURL(file); // Lit l'image comme une URL de données
+        } else {
+            // Réinitialise la prévisualisation si aucun fichier n'est sélectionné
+            imagePreview.src = '';
+        }
+    });
+});
 
 // Écouteur d'événement sur le conteneur des compétences pour détecter les changements
 document.getElementById('skills-wrapper').addEventListener('change', updateSkillOptions);

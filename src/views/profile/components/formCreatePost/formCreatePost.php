@@ -24,23 +24,27 @@
 
             <div>
                 <div class="formPost-container-input">
-                    <label for="title">Titre</label>
+                    <label for="title">Titre *</label>
                     <input type="text" name="title" id="title" required>
                 </div>
                 <div class="formPost-container-input">
-                    <label for="description">description</label>
+                    <label for="description">Description *</label>
                     <input type="text" name="description" id="description" required>
                 </div>
                 <div class="formPost-container-input">
                     <label for="external_link">Lien externe</label>
-                    <input type="text" name="external_link" id="external_link" required>
+                    <input type="text" name="external_link" id="external_link">
                 </div>
                 <div class="formPost-container-input">
-                    <label for="image_path">Site web</label>
-                    <input type="file" name="image_path" id="image_path">
+                    <label for="image_path">Image</label>
+                    <input type="file" name="image_path" id="image_path" accept="image/*">
+
+                    <div class="formPost-container-input-img">
+                        <!-- L'image sera affichée ici après sélection -->
+                        <img id="imagePreview" src="" alt="">
+                    </div>
                 </div>
             </div>
-
             <input type="submit" class="input-btn-maj" value="Créer le post">
         </form>
     </div>

@@ -32,21 +32,6 @@
     }
     form {
       padding: 2rem 1rem;
-      .form-avatar {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        margin-bottom: 10px;
-        .avatar {
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
-          object-fit: cover;
-
-        }
-      }
       .formPost-container-input {
         margin-top: 10px;
         width: 100%;
@@ -61,6 +46,15 @@
         label {
           margin-bottom: 5px;
           padding-left: 5px;
+        }
+        .formPost-container-input-img {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          margin-top: 10px;
         }
       }
       .formPost-hr {
