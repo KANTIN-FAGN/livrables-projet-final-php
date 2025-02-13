@@ -51,5 +51,8 @@ class PageController
     {
         include_once '../views/profile/services/profileService.php';
     }
+    public static function createPost(){
+        include_once '../views/profile/services/postService.php';
+    }
 
 }

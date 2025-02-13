@@ -13,7 +13,7 @@
                 </svg>
             </button>
         </div>
-        <form action="/create/posts" method="POST" enctype="multipart/form-data">
+        <form action="/create/post" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($userData['id'], ENT_QUOTES) ?>">
 
             <div>

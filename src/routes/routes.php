@@ -19,6 +19,9 @@ $router->add('GET', '/profile', function () use ($controller) {
 $router->add('POST', '/profile/edit', function () use ($controller) {
     $controller->editProfile();
 }, [OwnerMiddleware::class]);
+$router->add('POST', '/create/post', function () use ($controller) {
+    $controller->createPost();
+}, [OwnerMiddleware::class]);
 
 
 $router->add('GET', '/register', function () use ($controller) {
