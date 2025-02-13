@@ -11,11 +11,6 @@ use App\Controllers\UserController;
 use App\Controllers\AuthController;
 
 try {
-    // S'assurer que la session est active
-    if (session_status() !== PHP_SESSION_ACTIVE) {
-        session_start();
-    }
-
     // Récupérer les données de la requête POST avec des valeurs par défaut si elles sont absentes
     $id = $_POST['id'] ?? null;
     $firstname = $_POST['firstname'] ?? null;

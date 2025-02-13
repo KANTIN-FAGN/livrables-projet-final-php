@@ -129,6 +129,13 @@ class UserController
     }
 
 
+    /**
+     * Récupère l'avatar d'un utilisateur en fonction de son ID.
+     *
+     * @param int $id L'identifiant unique de l'utilisateur.
+     * @return mixed L'avatar de l'utilisateur sous la forme retournée par le modèle,
+     *               comme une URL, un chemin vers un fichier ou null si aucun avatar n'existe.
+     */
     public function getAvatarByUserId($id)
     {
         return $this->userModel->getAvatarByUserId($id);

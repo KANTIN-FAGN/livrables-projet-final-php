@@ -1,5 +1,6 @@
 <?php
 include_once BASE_PATH . 'src/includes/bootstrap.php';
+
 ?>
 
 <section class="posts-card">
@@ -34,6 +35,9 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
                     <a href="<?= htmlspecialchars($external_link ?? '#', ENT_QUOTES, 'UTF-8') ?>">
                         <?= htmlspecialchars($external_link ?? '', ENT_QUOTES, 'UTF-8') ?>
                     </a>
+                </div>
+                <div class="post-image">
+                    <img src="<?= $_ENV['BASE_URL']. '/img/posts/' ?><?= htmlspecialchars($image_path, ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($image_path, ENT_QUOTES, 'UTF-8') ?>">
                 </div>
             </div>
         <?php endforeach; ?>

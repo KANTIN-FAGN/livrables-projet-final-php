@@ -25,6 +25,7 @@ class AuthController
 
         try {
             $authModel = new \App\Models\UserModel(); // Instanciation du modèle utilisateur
+            $postModel = new \App\Models\PostModel();
 
             // Étape 1 : Récupération des informations utilisateur à partir de l'email
             $user = $authModel->findUserByEmail($email);
@@ -53,7 +54,7 @@ class AuthController
             }
 
             // Récupération des publications associées à l'utilisateur
-            $posts = $authModel->findPostsUserByID($user['id']);
+            $posts = $postModel->findPostsUserByID($user['id']);
             if (is_array($posts)) {
                 foreach ($posts as &$post) {
                     $post = (array)$post; // Convertir chaque publication en tableau
@@ -126,6 +127,7 @@ class AuthController
     public function regenerateToken($updatedUserData)
     {
         $authModel = new \App\Models\UserModel(); // Instanciation du modèle utilisateur
+        $postModel = new \App\Models\PostModel();
         // Vérification que le cookie JWT existe déjà
         if (isset($_COOKIE['access_token'])) {
             // Récupération des compétences utilisateur
@@ -138,6 +140,14 @@ class AuthController
             // Définir des valeurs par défaut si l'utilisateur n'a pas renseigné certaines informations
             $avatar = $profile['avatar'] ?? '';
 
+            // Récupération des publications associées à l'utilisateur
+            $posts = $postModel->findPostsUserByID($updatedUserData['id']);
+            if (is_array($posts)) {
+                foreach ($posts as &$post) {
+                    $post = (array)$post; // Convertir chaque publication en tableau
+                }
+            }
+
             // Préparation du nouveau payload pour le JWT
             $newPayload = [
                 'email' => $updatedUserData['email'],
@@ -146,6 +156,7 @@ class AuthController
                 'lastname' => ucfirst(strtolower($updatedUserData['lastname'])),   // Formater le nom
                 'bio' => $updatedUserData['bio'] ?? 'Pas de biographie renseignée.',
                 'role' => $updatedUserData['role'],
+                'posts' => $posts,
                 'website_link' => $updatedUserData['website_link'] ?? '',
                 'avatar' => $avatar,
                 'skills' => $skills,
