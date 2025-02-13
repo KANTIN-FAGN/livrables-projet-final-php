@@ -1,7 +1,5 @@
 <?php
-if (session_status() !== PHP_SESSION_ACTIVE) {
-    session_start();
-}
+include_once BASE_PATH . 'src/includes/bootstrap.php';
 
 $connected = isset($_SESSION['connected']) && $_SESSION['connected'] === true;
 
@@ -26,6 +24,23 @@ $mimeType = mime_content_type($imagePath);
                 </i>
             </a>
             <?php if ($connected === true) : ?>
+                <?php if (isset($userData) && isset($userData['role']) && $userData['role'] === 'admin') : ?>
+                    <a href="/dashboard">
+                        <i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                 class="lucide lucide-chart-network">
+                                <path d="m13.11 7.664 1.78 2.672"/>
+                                <path d="m14.162 12.788-3.324 1.424"/>
+                                <path d="m20 4-6.06 1.515"/>
+                                <path d="M3 3v16a2 2 0 0 0 2 2h16"/>
+                                <circle cx="12" cy="6" r="2"/>
+                                <circle cx="16" cy="12" r="2"/>
+                                <circle cx="9" cy="15" r="2"/>
+                            </svg>
+                        </i>
+                    </a>
+                <?php endif; ?>
                 <a href="/logout">
                     <i>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"

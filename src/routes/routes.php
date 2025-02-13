@@ -2,6 +2,7 @@
 
 use Core\Router;
 use Middlewares\OwnerMiddleware;
+use Middlewares\IsAdminMiddleware;
 
 // Crée une instance de Router
 $router = new Router();
@@ -33,7 +34,6 @@ $router->add('GET' , '/profile/delete-post/{id}', function ($id) use ($controlle
     $controller->deletePost($id);
 }, [OwnerMiddleware::class]);
 
-
 $router->add('GET', '/register', function () use ($controller) {
     $controller->register();
 });
@@ -51,6 +51,10 @@ $router->add('POST', '/login-controller', function () use ($controller) {
 $router->add('GET', '/logout', function () use ($authController) {
     $authController->logout();
 });
+
+$router->add('GET', '/dashboard', function () use ($controller) {
+    $controller->dashboard();
+}, [IsAdminMiddleware::class]);
 
 // Par exemple : Route avec paramètre dynamique
 $router->add('GET', '/user/{id}', function ($id) {

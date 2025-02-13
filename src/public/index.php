@@ -6,6 +6,10 @@ use Dotenv\Dotenv;
 
 define('BASE_PATH', __DIR__ . '/../../');
 
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 $dotenvPath = BASE_PATH . '.env';
 if (file_exists($dotenvPath)) {
     $dotenv = Dotenv::createImmutable(BASE_PATH); // Charger le fichier .env

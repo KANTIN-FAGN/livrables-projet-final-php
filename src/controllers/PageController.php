@@ -132,14 +132,8 @@ class PageController
      */
     public static function deletePost(int $id)
     {
-        // Journalise l'ID reçu pour débogage
-        error_log('id : ' . $id);
-
         $postController = new PostController(); // Nouveau contrôleur pour gérer les posts
         $post = $postController->getPostById($id); // Récupère le post depuis la base de données
-
-        // Journaliser le résultat de la récupération pour vérification
-        error_log('Résultat de getPostById : ' . print_r($post, true));
 
         // Vérifier si le post existe
         if (!$post) {
@@ -149,5 +143,9 @@ class PageController
 
         // Inclure le fichier de service où la suppression sera exécutée
         include_once '../views/profile/services/postDeleteService.php';
+    }
+
+    public static function dashboard(){
+        include_once '../views/admin/dashboard/dashboard.php';
     }
 }
