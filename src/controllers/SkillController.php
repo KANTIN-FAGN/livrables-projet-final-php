@@ -36,8 +36,22 @@ class SkillController
         return $skills;
     }
 
-    public function deleteSkill(int $id) {
+    /**
+     * Supprime une compétence (skill) spécifique.
+     *
+     * Cette méthode appelle le modèle `skillModel` pour supprimer une compétence
+     * identifiée par son ID dans la base de données.
+     *
+     * @param int $id Identifiant de la compétence à supprimer.
+     *
+     * @return bool Indique si la suppression a réussi (`true`) ou échoué (`false`).
+     */
+    public function deleteSkill(int $id): bool
+    {
+        // Appel du modèle pour exécuter la suppression de la compétence
         $result = $this->skillModel->deleteSkill($id);
+
+        // Retourne le résultat de l'opération (succès ou échec)
         return $result;
     }
 }

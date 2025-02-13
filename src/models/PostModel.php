@@ -87,12 +87,22 @@ class PostModel
         }
     }
 
+    /**
+     * Récupère tous les posts depuis la table associée à ce modèle.
+     *
+     * Cette méthode exécute une requête SELECT pour obtenir tous les enregistrements
+     * contenus dans la table définie dans la propriété `$this->table`.
+     *
+     * @return array|null Retourne un tableau associatif contenant les posts si la requête réussit,
+     *                    ou null si une erreur survient.
+     */
     public function getPosts(): ?array
     {
+        // Requête SQL pour sélectionner tous les enregistrements
         $sql = "SELECT * FROM $this->table";
 
         try {
-            // Préparation de la requête SQL
+            // Préparation de la requête SQL pour prévenir les injections SQL
             $stmt = $this->pdo->prepare($sql);
 
             // Exécution de la requête
@@ -101,9 +111,11 @@ class PostModel
             // Retourne les résultats sous forme d'un tableau associatif
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
-            // Journalise une erreur en cas d'échec
+            // Journalisation de l'erreur dans les logs pour débogage
             error_log("Erreur dans getPosts : " . $e->getMessage());
-            return null; // Retourne null en cas d'échec
+
+            // Retourne null en cas d'échec
+            return null;
         }
     }
 
