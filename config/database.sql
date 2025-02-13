@@ -14,49 +14,49 @@ USE projetb2;
 CREATE TABLE IF NOT EXISTS users (
                                      id INT PRIMARY KEY AUTO_INCREMENT,
                                      email VARCHAR(255) UNIQUE NOT NULL,
-    firstname VARCHAR(255)  NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('utilisateur', 'admin') DEFAULT 'utilisateur',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
+                                     firstname VARCHAR(255)  NOT NULL,
+                                     lastname VARCHAR(255) NOT NULL,
+                                     password VARCHAR(255) NOT NULL,
+                                     role ENUM('utilisateur', 'admin') DEFAULT 'utilisateur',
+                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
 -- Table de compétences proposées par l'administrateur
 CREATE TABLE IF NOT EXISTS skills (
                                       id INT PRIMARY KEY AUTO_INCREMENT,
                                       name VARCHAR(255) UNIQUE NOT NULL
-    );
+);
 
 -- Table pour associer les compétences aux utilisateurs
 CREATE TABLE IF NOT EXISTS user_skills (
                                            user_id INT NOT NULL,
                                            skill_id INT NOT NULL,
                                            level ENUM('débutant', 'intermédiaire', 'avancé', 'expert') NOT NULL DEFAULT 'débutant',
-    PRIMARY KEY (user_id, skill_id),
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE
-    );
+                                           PRIMARY KEY (user_id, skill_id),
+                                           FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                                           FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE
+);
 
 -- Table pour gérer les projets des utilisateurs
 CREATE TABLE IF NOT EXISTS projects (
                                         id INT PRIMARY KEY AUTO_INCREMENT,
                                         user_id INT NOT NULL,
                                         title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    image_path VARCHAR(255),
-    external_link VARCHAR(255),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
+                                        description TEXT NOT NULL,
+                                        image_path VARCHAR(255),
+                                        external_link VARCHAR(255),
+                                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 -- Table pour stocker les informations personnelles supplémentaires des utilisateurs
 CREATE TABLE IF NOT EXISTS profiles (
                                         user_id INT PRIMARY KEY,
                                         avatar VARCHAR(255) DEFAULT NULL,
-    bio TEXT DEFAULT NULL,
-    website_link VARCHAR(255) DEFAULT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-    );
+                                        bio TEXT DEFAULT NULL,
+                                        website_link VARCHAR(255) DEFAULT NULL,
+                                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
 
 -- Insérer des comptes utilisateurs de test
 INSERT INTO users (email, firstname, lastname, password, role)
@@ -98,19 +98,20 @@ VALUES
 -- Insérer des projets exemples pour chaque utilisateur
 INSERT INTO projects (user_id, title, description, image_path, external_link)
 VALUES
-    (2, 'Portfolio Personnel', 'Création de mon propre portfolio.', 'images/portfolio1.jpg', 'https://portfolio-user1.com'),
-    (2, 'Blog Tech', 'Développement d\'un blog sur les dernières technologies.', 'images/blog_tech.jpg', 'https://techblog-user1.com'),
-    (2, 'E-commerce', 'Réalisation d\'un site e-commerce simple.', 'images/ecommerce.jpg', 'https://ecommerce-user1.com'),
-    (3, 'Application de Todo List', 'Une application pour gérer les tâches quotidiennes.', 'images/todo_app.jpg', NULL),
-    (3, 'Jeu Web', 'Petit jeu réalisé en JavaScript.', 'images/game_project.jpg', 'https://game-user2.com'),
-    (3, 'API REST', 'Développement d\'une API REST pour une application mobile.', 'images/api.jpg', NULL),
-    (4, 'Blog Personnel', 'Blogging sur les tendances technologiques.', 'images/blog_personal.jpg', 'https://blog-user3.com'),
-    (4, 'Outil de Monitoring', 'Développement d\'un outil pour surveiller des systèmes en temps réel.', 'images/monitoring_tool.jpg', NULL),
-    (4, 'Portfolio Vitrine', 'Création d\'un portfolio interactif.', 'images/portfolio_vitrine.jpg', 'https://portfolio-vito.com');
+    (2, 'Portfolio Personnel', 'Création de mon propre portfolio.', 'imagePost_dante_dante_2_20250213_214453.jpg', 'https://portfolio-user1.com'),
+    (2, 'Blog Tech', 'Développement d\'un blog sur les dernières technologies.', 'imagePost_dante_dante_2_20250213_214638.jpeg', 'https://techblog-user1.com'),
+    (2, 'E-commerce', 'Réalisation d\'un site e-commerce simple.', 'imagePost_dante_dante_2_20250213_214718.jpg', 'https://ecommerce-user1.com'),
+    (3, 'Application de Todo List', 'Une application pour gérer les tâches quotidiennes.', 'imagePost_pivot_nathanael_3_20250213_214218.jpg', NULL),
+    (3, 'Jeu Web', 'Petit jeu réalisé en JavaScript.', 'imagePost_pivot_nathanael_3_20250213_214129.jpeg', 'https://game-user2.com'),
+    (3, 'API REST', 'Développement d\'une API REST pour une application mobile.', 'imagePost_pivot_nathanael_3_20250213_214254.jpeg', NULL),
+    (4, 'Blog Personnel', 'Blogging sur les tendances technologiques.', 'imagePost_deriu_vito_4_20250213_214917.jpg', 'https://blog-user3.com'),
+    (4, 'Outil de Monitoring', 'Développement d\'un outil pour surveiller des systèmes en temps réel.', 'imagePost_deriu_vito_4_20250213_214926.jpg', NULL),
+    (4, 'Portfolio Vitrine', 'Création d\'un portfolio interactif.', 'imagePost_deriu_vito_4_20250213_214937.jpg', 'https://portfolio-vito.com');
 
 -- Insérer des profils supplémentaires pour les utilisateurs
 INSERT INTO profiles (user_id, avatar, bio, website_link)
-VALUES 
-    (2, 'avatars/user1.png', 'Développeur passionné par le web.', 'https://portfolio-user1.com'),
-    (3, 'avatars/user2.png', 'Ingénieure et développeuse freelance.', NULL),
-    (4, 'avatars/user3.png', 'Stagiaire chez google', NULL);
+VALUES
+    (1,'default.png', 'je suis le chef des Oompa Loompa', 'kantin-fagniart.fr'),
+    (2, 'default.png', 'Développeur passionné par le web.', 'https://portfolio-user1.com'),
+    (3, 'default.png', 'Ingénieure et développeuse freelance.', NULL),
+    (4, 'default.png', 'Stagiaire chez google', NULL);
