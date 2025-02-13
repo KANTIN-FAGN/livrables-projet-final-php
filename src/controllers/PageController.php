@@ -145,17 +145,46 @@ class PageController
         include_once '../views/profile/services/postDeleteService.php';
     }
 
-    public static function dashboardSkills(){
+    /**
+     * Affiche le tableau de bord des compétences (skills) de l'admin.
+     *
+     * Cette méthode inclut directement le fichier correspondant à la vue associée
+     * au tableau de bord des compétences.
+     *
+     * @return void Aucun retour, cette méthode affiche directement la vue.
+     */
+    public static function dashboardSkills()
+    {
         include_once '../views/admin/skills/skills.php';
     }
 
-    public static function skillsService(){
+    /**
+     * Affiche la gestion des services liés aux compétences (skills).
+     *
+     * Cette méthode inclut directement le fichier correspondant à la vue
+     * pour gérer les services associés aux compétences via l'interface admin.
+     *
+     * @return void Aucun retour, cette méthode affiche directement la vue.
+     */
+    public static function skillsService()
+    {
         include_once '../views/admin/services/skillsService.php';
     }
-    public static function skillsDeleteService($id){
 
+    /**
+     * Supprime un service lié à une compétence spécifique.
+     *
+     * Cette méthode enregistre l'identifiant de la compétence passée en paramètre,
+     * puis inclut le fichier de vue responsable de la suppression.
+     *
+     * @param int $id Identifiant de la compétence à supprimer.
+     *
+     * @return void Aucun retour, cette méthode affiche directement la vue.
+     */
+    public static function skillsDeleteService($id)
+    {
+        // Stockage de l'ID de la compétence passée en paramètre
         $skillID = $id;
-
         include_once '../views/admin/services/skillsDeleteService.php';
     }
 }
