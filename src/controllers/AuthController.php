@@ -19,7 +19,7 @@ class AuthController
         // Validation des champs obligatoires
         if (!$email || !$password) {
             $_SESSION["errors"]["validation"] = "Email ou mot de passe manquant."; // Message d'erreur
-            header('Location: ../views/auth/login/login.php', true, 400); // Erreur 400 : Requête incorrecte
+            header('Location: /login', true, 400); // Erreur 400 : Requête incorrecte
             exit;
         }
 
@@ -33,7 +33,7 @@ class AuthController
             // Vérification de l'existence de l'utilisateur et validation du mot de passe
             if (!$user || !password_verify($password, $user['password'])) {
                 $_SESSION["errors"]["validation"] = "Email ou mot de passe incorrect."; // Message d'erreur
-                header('Location: ../views/auth/login/login.php', true, 401); // Erreur 401 : Non autorisé
+                header('Location: /login', true, 401); // Erreur 401 : Non autorisé
                 exit;
             }
 
@@ -100,7 +100,7 @@ class AuthController
         } catch (\Exception $e) {
             // Gestion des exceptions et affichage d'un message d'erreur générique
             $_SESSION["errors"]["exception"] = "Erreur interne : " . $e->getMessage();
-            header('Location: ../views/auth/login/login.php', true, 500); // Erreur 500 : Erreur serveur
+            header('Location: /login', true, 500); // Erreur 500 : Erreur serveur
             exit;
         }
     }

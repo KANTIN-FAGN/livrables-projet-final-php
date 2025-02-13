@@ -2,8 +2,6 @@
 
 include_once BASE_PATH . 'src/includes/bootstrap.php';
 
-require_once dirname(__DIR__, 4) . '/../vendor/autoload.php';
-
 use App\controllers\AuthController;
 
 $hasEmail = isset($_POST["email"]) && !empty($_POST["email"]);

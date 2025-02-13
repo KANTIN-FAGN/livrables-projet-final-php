@@ -23,7 +23,7 @@ if (!file_exists($avatarPathFile)) {
     <?php if ($isConnected): ?>
         <div class="user-info">
             <div class="avatar-container">
-                <img src="<?= htmlspecialchars($avatarPathPublic) ?>" alt="Avatar utilisateur" class="avatar"/>
+                <img src="<?= htmlspecialchars($_ENV['BASE_URL'] . '/img/avatars/' . $userData['avatar']) ?>" alt="Avatar utilisateur" class="avatar"/>
             </div>
             <div class="user-data">
                 <p><?= htmlspecialchars($userData['firstname'] ?? 'Unknown') ?> <?= htmlspecialchars(strtoupper($userData['lastname'] ?? 'Unknown')) ?></p>
