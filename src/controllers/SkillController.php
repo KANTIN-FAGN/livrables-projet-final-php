@@ -17,6 +17,11 @@ class SkillController
         $this->skillModel = new SkillModel();
     }
 
+    public function createSkill(string $name) {
+        $skill = $this->skillModel->createSkill($name);
+        return $skill;
+    }
+
     /**
      * Récupère toutes les compétences disponibles via le modèle
      *
@@ -29,5 +34,10 @@ class SkillController
 
         // Retourne les compétences au format récupéré depuis le modèle
         return $skills;
+    }
+
+    public function deleteSkill(int $id) {
+        $result = $this->skillModel->deleteSkill($id);
+        return $result;
     }
 }

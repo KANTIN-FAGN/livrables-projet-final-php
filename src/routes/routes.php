@@ -3,6 +3,7 @@
 use Core\Router;
 use Middlewares\OwnerMiddleware;
 use Middlewares\IsAdminMiddleware;
+use function Sodium\add;
 
 // Crée une instance de Router
 $router = new Router();
@@ -53,7 +54,13 @@ $router->add('GET', '/logout', function () use ($authController) {
 });
 
 $router->add('GET', '/dashboard', function () use ($controller) {
-    $controller->dashboard();
+    $controller->dashboardSkills();
+}, [IsAdminMiddleware::class]);
+$router->add('POST', '/admin/create/skills', function () use ($controller) {
+    $controller->skillsService();
+}, [IsAdminMiddleware::class]);
+$router->add('GET', '/admin/delete/skill/{id}', function ($id) use ($controller) {
+    $controller->skillsDeleteService($id);
 }, [IsAdminMiddleware::class]);
 
 // Par exemple : Route avec paramètre dynamique

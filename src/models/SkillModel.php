@@ -21,6 +21,13 @@ class SkillModel
         $this->pdo = Database::getPDO();
     }
 
+    public function createSkill($name) {
+        $sql = "INSERT INTO $this->table (name) VALUES (:name)";
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['name' => $name]);
+        return $statement->rowCount();
+    }
+
     /**
      * Récupère toutes les compétences disponibles
      *
@@ -66,5 +73,12 @@ class SkillModel
             error_log("Erreur dans getUserSkills pour userId=$userId : " . $e->getMessage());
             return [];
         }
+    }
+
+    public function deleteSkill($id) {
+        $sql = "DELETE FROM $this->table WHERE id = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->execute(['id' => $id]);
+        return $statement->rowCount();
     }
 }

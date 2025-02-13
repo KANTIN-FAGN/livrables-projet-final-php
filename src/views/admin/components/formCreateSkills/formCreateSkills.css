@@ -1,0 +1,131 @@
+.fromCreateSkills {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1;
+  width: 100vw;
+  height: 100vh;
+  top: -100%;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.fromCreateSkills.open {
+  top: 0;
+}
+.fromCreateSkills .fromCreateSkills-container {
+  box-shadow: 0px 0px 0px 1px rgba(140, 140, 140, 0.2);
+  border-radius: 0.4rem;
+  background-color: white;
+  min-width: 700px;
+}
+.fromCreateSkills .fromCreateSkills-container .fromCreateSkills-btn {
+  position: relative;
+  width: 100%;
+}
+.fromCreateSkills .fromCreateSkills-container .fromCreateSkills-btn button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+.fromCreateSkills .fromCreateSkills-container form {
+  padding: 2rem 1rem;
+}
+.fromCreateSkills .fromCreateSkills-container form .form-avatar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+.fromCreateSkills .fromCreateSkills-container form .form-avatar .avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.fromCreateSkills .fromCreateSkills-container form .fromCreateSkills-container-input {
+  margin-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.fromCreateSkills .fromCreateSkills-container form .fromCreateSkills-container-input input {
+  width: 100%;
+  border: 1px solid rgba(140, 140, 140, 0.2);
+  border-radius: 0.4rem;
+  padding: 6px 8px;
+}
+.fromCreateSkills .fromCreateSkills-container form .fromCreateSkills-container-input label {
+  margin-bottom: 5px;
+  padding-left: 5px;
+}
+.fromCreateSkills .fromCreateSkills-container form .fromCreateSkills-hr {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.fromCreateSkills .fromCreateSkills-container form .fromCreateSkills-hr hr {
+  margin: 1rem 0;
+  border: none;
+  border-bottom: 1px solid rgba(140, 140, 140, 0.2);
+  width: 70%;
+}
+.fromCreateSkills .fromCreateSkills-container form #skills-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.fromCreateSkills .fromCreateSkills-container form #skills-wrapper .skill-entry {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.fromCreateSkills .fromCreateSkills-container form #skills-wrapper .skill-entry .delete-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  color: black;
+}
+.fromCreateSkills .fromCreateSkills-container form #skills-wrapper .skill-entry .delete-btn:hover {
+  color: red;
+}
+.fromCreateSkills .fromCreateSkills-container form #add-skill-btn {
+  margin-top: 10px;
+  width: 100%;
+  height: 2rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  background-color: grey;
+}
+.fromCreateSkills .fromCreateSkills-container form #add-skill-btn:hover {
+  background-color: green;
+  transition: all 0.3s ease;
+}
+.fromCreateSkills .fromCreateSkills-container form .input-btn-maj {
+  margin-top: 10px;
+  width: 100%;
+  height: 2rem;
+  border-radius: 0.2rem;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  transition: all 0.3s ease;
+  background-color: grey;
+}
+.fromCreateSkills .fromCreateSkills-container form .input-btn-maj:hover {
+  background-color: dodgerblue;
+  transition: all 0.3s ease;
+}
+
+/*# sourceMappingURL=formCreateSkills.css.map */

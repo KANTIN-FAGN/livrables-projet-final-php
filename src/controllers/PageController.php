@@ -145,7 +145,17 @@ class PageController
         include_once '../views/profile/services/postDeleteService.php';
     }
 
-    public static function dashboard(){
-        include_once '../views/admin/dashboard/dashboard.php';
+    public static function dashboardSkills(){
+        include_once '../views/admin/skills/skills.php';
+    }
+
+    public static function skillsService(){
+        include_once '../views/admin/services/skillsService.php';
+    }
+    public static function skillsDeleteService($id){
+
+        $skillID = $id;
+
+        include_once '../views/admin/services/skillsDeleteService.php';
     }
 }
