@@ -24,7 +24,8 @@ class PostController
      */
     public function getPosts()
     {
-        // Méthode à implémenter pour récupérer une liste de posts
+        $result = $this->postModel->getPosts();
+        return $result;
     }
 
     /**

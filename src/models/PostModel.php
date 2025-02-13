@@ -87,6 +87,26 @@ class PostModel
         }
     }
 
+    public function getPosts(): ?array
+    {
+        $sql = "SELECT * FROM $this->table";
+
+        try {
+            // Préparation de la requête SQL
+            $stmt = $this->pdo->prepare($sql);
+
+            // Exécution de la requête
+            $stmt->execute();
+
+            // Retourne les résultats sous forme d'un tableau associatif
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            // Journalise une erreur en cas d'échec
+            error_log("Erreur dans getPosts : " . $e->getMessage());
+            return null; // Retourne null en cas d'échec
+        }
+    }
+
     /**
      * Récupère un post via son ID.
      *

@@ -11,6 +11,7 @@
         <?= file_get_contents(BASE_PATH . 'src/public/style.css') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/components/header/header.scss') ?>
         <?= file_get_contents(BASE_PATH . 'src/views/home/components/user-card/userCard.scss') ?>
+        <?= file_get_contents(BASE_PATH . 'src/views/home/components/post-card/postCard.scss') ?>
     </style>
 
 </head>
@@ -20,9 +21,7 @@
     <section class="container">
         <?php include BASE_PATH . 'src/views/home/components/user-card/userCard.php' ?>
         <div class="posts-container">
-            <div class="create-post-container">
-
-            </div>
+                <?php include BASE_PATH . 'src/views/home/components/post-card/postCard.php' ?>
         </div>
     </section>
 </main>
