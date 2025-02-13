@@ -53,13 +53,13 @@ Ce projet est une application web développée en PHP & MySQL permettant aux uti
 1. Cloner le projet sur votre serveur local :
    ```sh
    git clone https://github.com/KANTIN-FAGN/livrables-projet-final-php.git
-   cd livrables-projet-final-php/src/public
+   cd livrables-projet-final-php
    ```
-2. Importer la base de données :
-    - *à renseigner*
+2. Importer la base de données : Exécuter le script SQL dans le fichier `config/database.sql` dans MyPHPMyAdmin
+
 
 3. Configurer la connexion à la base de données :
-   Modifier le fichier `config/database.php` :
+   Modifier le fichier `config/Database.php` :
    ```php
    define('DB_HOST', 'localhost');
    define('DB_NAME', 'projetb2');
