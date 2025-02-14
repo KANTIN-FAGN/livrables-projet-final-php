@@ -37,10 +37,24 @@ try {
     // Vérification de l'upload d'image
     $newFileName = null;
     if (isset($_FILES['image_path']) && $_FILES['image_path']['error'] === UPLOAD_ERR_OK) {
+        // Récupérer temporairement le chemin du fichier
         $temporaryPath = $_FILES['image_path']['tmp_name'];
         $originalName = $_FILES['image_path']['name'];
 
-        // Traitement de l'extension et validation
+        // Limiter la taille maximale (par exemple, 5 Mo)
+        $maxFileSize = 5 * 1024 * 1024; // 5 Mo
+        if ($_FILES['image_path']['size'] > $maxFileSize) {
+            throw new RuntimeException("Fichier trop volumineux. La taille maximale autorisée est de 5 Mo.");
+        }
+
+        // Vérifier le type MIME (double protection contre les fichiers malveillants)
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileMimeType = mime_content_type($temporaryPath);
+        if (!in_array($fileMimeType, $allowedMimeTypes)) {
+            throw new RuntimeException("Type de fichier non autorisé. Types acceptés : " . implode(', ', $allowedMimeTypes));
+        }
+
+        // Vérification de l'extension
         $fileParts = explode('.', $originalName);
         $extension = strtolower(end($fileParts));
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
@@ -49,21 +63,24 @@ try {
             throw new RuntimeException("Extension de fichier non autorisée. Extensions valides : " . implode(', ', $allowedExtensions));
         }
 
-        // Génération d'un nouveau nom pour l'image
-        $userData = $user->getUser($id);
+        // Génération d'un nouveau nom sécurisé pour l'image
+        $userData = $user->getUser($id); // Récupération des données utilisateur
         $prenom = isset($userData['firstname']) ? strtolower($userData['firstname']) : 'undefined';
         $nom = isset($userData['lastname']) ? strtolower($userData['lastname']) : 'undefined';
         $date = date('Ymd_His');
 
         $newFileName = 'imagePost_' . $nom . '_' . $prenom . '_' . $id . '_' . $date . '.' . $extension;
 
-        // Enregistrement du fichier
+        // Vérification et création sécurisée du dossier de destination
         $uploadDir = 'img/posts/';
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+            mkdir($uploadDir, 0755, true); // Créer le dossier s'il n'existe pas
         }
 
-        $finalPath = $uploadDir . $newFileName;
+        // Sécurisation du chemin final
+        $finalPath = realpath($uploadDir) . DIRECTORY_SEPARATOR . $newFileName;
+
+        // Déplacement sécurisé du fichier temporaire
         if (!move_uploaded_file($temporaryPath, $finalPath)) {
             throw new RuntimeException("Erreur lors du téléchargement de l'image.");
         }

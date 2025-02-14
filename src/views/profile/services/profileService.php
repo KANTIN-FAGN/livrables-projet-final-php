@@ -38,21 +38,34 @@ try {
 
     // Vérifier la présence d'un fichier uploadé dans $_FILES['avatar']
     if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
-        // Récupérer temporairement le chemin du fichier et ses informations
+        // Récupérer temporairement le chemin du fichier
         $temporaryPath = $_FILES['avatar']['tmp_name'];
         $originalName = $_FILES['avatar']['name'];
 
-        // Extraire l'extension du fichier
-        $fileParts = explode('.', $originalName);
-        $extension = strtolower(end($fileParts));
-
-        // Vérifier que l'extension du fichier est valide
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
-        if (!in_array($extension, $allowedExtensions)) {
-            throw new RuntimeException("Extension de fichier non autorisée. Fichiers acceptés : " . implode(', ', $allowedExtensions));
+        // Limiter la taille maximale (par exemple 5 Mo)
+        $maxFileSize = 5 * 1024 * 1024; // 5 Mo en octets
+        if ($_FILES['avatar']['size'] > $maxFileSize) {
+            throw new RuntimeException("Fichier trop volumineux. La taille maximale autorisée est de 5 Mo.");
         }
 
-        // Générer un nouveau nom pour l'image avec les informations de l'utilisateur
+        // Vérifier le type MIME (corné si le fichier est malveillant)
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileMimeType = mime_content_type($temporaryPath);
+        if (!in_array($fileMimeType, $allowedMimeTypes)) {
+            throw new RuntimeException("Type de fichier non autorisé. Types acceptés : " . implode(', ', $allowedMimeTypes));
+        }
+
+        // Extraire l'extension
+        $fileParts = explode('.', $originalName);
+        $extension = strtolower(end($fileParts)); // Toujours en minuscule (sécurité)
+
+        // Vérifier que l'extension correspond à une image valide
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        if (!in_array($extension, $allowedExtensions)) {
+            throw new RuntimeException("Extension de fichier non autorisée. Extensions acceptées : " . implode(', ', $allowedExtensions));
+        }
+
+        // Générer un nouveau nom pour l'image
         $prenom = isset($userData['firstname']) ? strtolower($userData['firstname']) : 'undefined';
         $nom = isset($userData['lastname']) ? strtolower($userData['lastname']) : 'undefined';
         $id = $userData['id'] ?? '0';
@@ -60,30 +73,34 @@ try {
 
         $newFileName = $nom . '_' . $prenom . '_' . $id . '_' . $date . '.' . $extension;
 
-        // Définir le dossier pour les uploads
+        // Définir le dossier de destination
         $uploadDir = 'img/avatars/';
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true); // Créer le dossier s'il n'existe pas
+            mkdir($uploadDir, 0755, true); // Créer le dossier avec des permissions sécurisées
         }
 
-        // Vérifier et supprimer l'ancienne image s'il y en a une
-        $existingAvatar = $userController->getAvatarByUserId($id); // Méthode à créer pour récupérer l'ancien avatar
+        // Vérifier s'il y a une ancienne image et supprimer si nécessaire
+        $existingAvatar = $userController->getAvatarByUserId($id); // Méthode pour récupérer l'ancien fichier
+        if ($existingAvatar && $existingAvatar !== 'default.png') {
+            $existingPath = $uploadDir . $existingAvatar;
 
-        if (!empty($existingAvatar) && $existingAvatar === 'default.png') {
-            error_log("Aucune suppression, l'image par défaut est utilisée : " . $existingAvatar);
-        } else {
-            if ($existingAvatar && file_exists($uploadDir . $existingAvatar)) {
-                unlink($uploadDir . $existingAvatar); // Supprimer l'ancien fichier
+            // Supprimer uniquement si le fichier existe sur le serveur et évitez les bugs
+            if (file_exists($existingPath) && is_writable($existingPath)) {
+                unlink($existingPath); // Suppression sécurisée
             }
+        } else {
+            error_log("Aucune suppression, l'image actuelle est : " . $existingAvatar);
         }
 
-        // Déplacer le fichier vers le dossier final
-        $finalPath = $uploadDir . $newFileName;
+        // Construire le chemin final (éviter le chemin malveillant)
+        $finalPath = realpath($uploadDir) . DIRECTORY_SEPARATOR . $newFileName;
+
+        // Sécuriser l'upload
         if (!move_uploaded_file($temporaryPath, $finalPath)) {
             throw new RuntimeException("Erreur lors du téléchargement de l'image.");
         }
 
-        // Mettre à jour l'avatar en base de données
+        // Mettre à jour le nouvel avatar dans la base de données
         $userController->updateAvatar($id, $newFileName);
     }
 
