@@ -37,7 +37,7 @@ Ce projet est une application web développée en PHP & MySQL permettant aux uti
 
 ### Sécurité
 
-- [ ] Protection contre XSS, CSRF et injections SQL
+- [X] Protection contre XSS, CSRF et injections SQL
 - [X] Hachage sécurisé des mots de passe
 - [X] Gestion des erreurs utilisateur avec affichage des messages et conservation des champs remplis
 - [X] Expiration automatique de la session après inactivité
@@ -125,7 +125,7 @@ UN exemple de structure possible (la première ligne doit respecter cette struct
 
 - **Backend** : **PHP / MYSQL**
 - **Frontend** : **PHP / SCSS**
-- **Sécurité** : **SHA256**
+- **Sécurité** : **SHA256 / XSS / CSRF**
 - **Gestion du Projet** : **GITHUB**
 
 ## Licence
