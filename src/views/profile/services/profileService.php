@@ -4,6 +4,12 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die('Échec de la validation CSRF.');
+}
+unset($_SESSION['csrf_token']);
+
+
 // Inclusion des dépendances nécessaires via le fichier bootstrap
 require_once '../includes/bootstrap.php';
 
@@ -62,8 +68,13 @@ try {
 
         // Vérifier et supprimer l'ancienne image s'il y en a une
         $existingAvatar = $userController->getAvatarByUserId($id); // Méthode à créer pour récupérer l'ancien avatar
-        if ($existingAvatar && file_exists($uploadDir . $existingAvatar)) {
-            unlink($uploadDir . $existingAvatar); // Supprimer l'ancien fichier
+
+        if (!empty($existingAvatar) && $existingAvatar === 'default.png') {
+            error_log("Aucune suppression, l'image par défaut est utilisée : " . $existingAvatar);
+        } else {
+            if ($existingAvatar && file_exists($uploadDir . $existingAvatar)) {
+                unlink($uploadDir . $existingAvatar); // Supprimer l'ancien fichier
+            }
         }
 
         // Déplacer le fichier vers le dossier final

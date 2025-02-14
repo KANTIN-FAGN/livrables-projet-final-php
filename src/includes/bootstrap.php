@@ -31,5 +31,11 @@ if ($jwt) {
     $userData = JwtService::verifyToken($jwt);
 }
 
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32)); // Token de 32 caractères
+}
+$csrfToken = $_SESSION['csrf_token'];
+
+
 // Validation de la connexion : un utilisateur est considéré connecté si le jeton est valide
 $isConnected = $userData !== null;

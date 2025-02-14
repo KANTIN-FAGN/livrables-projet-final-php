@@ -22,6 +22,7 @@ $skills = $skillController->getSkills();
         </div>
         <form action="/profile/edit" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($userData['id'], ENT_QUOTES) ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
 
             <div>
                 <h3>

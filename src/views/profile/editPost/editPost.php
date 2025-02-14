@@ -18,6 +18,7 @@ include_once BASE_PATH . 'src/includes/bootstrap.php';
     <div class="formEditPost-container">
         <form action="/profile/edit-post-service" method="POST"
               enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken, ENT_QUOTES, 'UTF-8') ?>">
             <input type="hidden" name="user_id" value="<?= htmlspecialchars($userData['id'], ENT_QUOTES) ?>">
             <input type="hidden" name="id" value="<?= htmlspecialchars($post['id'], ENT_QUOTES) ?>">
 

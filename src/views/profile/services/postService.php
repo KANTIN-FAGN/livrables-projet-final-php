@@ -4,6 +4,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 
+if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+    die('Échec de la validation CSRF.');
+}
+unset($_SESSION['csrf_token']);
+
 // Inclusion des dépendances nécessaires via le fichier bootstrap
 require_once '../includes/bootstrap.php';
 
